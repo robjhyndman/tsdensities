@@ -24,11 +24,11 @@ output:
     fig_caption: yes
     fig_height: 5
     fig_width: 8
+    includes:
+      in_header: preamble.tex
     keep_tex: yes
     number_sections: yes
     citation_package: biblatex
-    includes:
-      in_header: preamble.tex
 ---
 
 ```{r setup, include=FALSE}
@@ -43,9 +43,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The principal motivation of this paper arises due to the non-existence of previous studies on nonparametric estimation of a time series of densities, taking account of the time ordering of the densities. A few researchers have estimated a sequence of density functions, including \citet{KneipUtikal2001,ParkMarron1990,WandMarronRuppert1991}. However, they ignored the time ordering of the densities and estimated the densities independently for every particular year, ignoring all other years. This paper will address this issue by proposing a method to nonparametrically estimate a time series of density functions using logspline approach considering the time ordering of the densities.
+The principal motivation of this paper arises due to the non-existence of previous studies on nonparametric estimation of a time series of densities, taking account of the time ordering of the densities. A few researchers have estimated a sequence of density functions, including @KneipUtikal2001, @ParkMarron1990, and @WandMarronRuppert1991. However, they ignored the time ordering of the densities and estimated the densities independently for every particular year, ignoring all other years. This paper will address this issue by proposing a method to nonparametrically estimate a time series of density functions using logspline approach considering the time ordering of the densities.
 
-We consider the logspline density estimation approach to estimate a time series of univariate density functions $\{f_t(y)\}_{t=1}^{T}$ with a similar structure using data $\{y_{t,j}\}$ for $t =1,\dots,T$ and $j=1,\dots,n_t$, where $n_t$ is the number of observations at time $t$ and $\{y_{t,j}\} \in \mathds{R}$. The logspline model was proposed by \citet{KooperbergStone1991, KooperbergStone1992, StoneHansenKooperberg1997}, and this model at time $t$ is given by:
+We consider the logspline density estimation approach to estimate a time series of univariate density functions $\{f_t(y)\}_{t=1}^{T}$ with a similar structure using data $\{y_{t,j}\}$ for $t =1,\dots,T$ and $j=1,\dots,n_t$, where $n_t$ is the number of observations at time $t$ and $\{y_{t,j}\} \in \mathds{R}$. The logspline model was proposed by @KooperbergStone1991, @KooperbergStone1992, and @StoneHansenKooperberg1997, and this model at time $t$ is given by:
 \begin{equation}\label{usualmodel}
 f_t(y;\bm{\theta}_t) = \text{exp} \left( b_t(y;\bm{\theta}_t) - c_t(\bm{\theta}_t) \right)
 \end{equation}
@@ -70,7 +70,7 @@ In $\eqref{usualmodel}$, we could treat every data set separately and a sequence
   \label{Est_Commonknotsv.Differentknots3}
 \end{figure}
 
-All existing density estimation methods handle continuous data; however, few methods handle discrete data. \citet{LiRacine2003} considered the nonparametric estimation of joint distributions with mixed discrete and continuous data. \citet{HallRacineLi2004} considered the nonparametric estimation of conditional densities with mixed data and used cross-validation for choosing optimal bandwidths. This paper will address this issue---limited research on handling discrete data in density estimation methods---by proposing four conditional density estimation methods with time as a discrete conditioning variable.
+All existing density estimation methods handle continuous data; however, few methods handle discrete data. @LiRacine2003 considered the nonparametric estimation of joint distributions with mixed discrete and continuous data. @HallRacineLi2004 considered the nonparametric estimation of conditional densities with mixed data and used cross-validation for choosing optimal bandwidths. This paper will address this issue---limited research on handling discrete data in density estimation methods---by proposing four conditional density estimation methods with time as a discrete conditioning variable.
 
 The density evaluation methods in time series analysis are generally dealt with one observation at a time; however, this paper uses thousands of observations in each time period. To the best of our knowledge, the area of density evaluation with thousands of observations in each time period has not been touched upon in the literature. In light of the lack of attention paid to this topic, we implement a new method to evaluate the reliability of density estimates assessing calibration based on the probability integral transform (PIT).
 
@@ -93,14 +93,14 @@ The optimal parameters at time $t$ are estimated maximising the log-likelihood f
 \begin{equation}\label{maximumlikelihood}
 L_t(\bm{\theta}_t) = \sum\limits_{j=1}^{n_t} \text{log} f_t(y_{t,j};\bm{\theta}_t)
 \end{equation}
-\citet{Stone1990} showed that the log-likelihood of a univariate logspline density function was a strictly concave function on $\Theta$, and that the maximum likelihood estimate $\hat{\bm{\theta}_t}$ of $\bm{\theta}_t$ was unique if it existed.
+@Stone1990 showed that the log-likelihood of a univariate logspline density function was a strictly concave function on $\Theta$, and that the maximum likelihood estimate $\hat{\bm{\theta}_t}$ of $\bm{\theta}_t$ was unique if it existed.
 
 \subsection{Common knots selection}
 \label{ES1.1:subsec:commonknotsselection}
 
-By using the ideas of the knot placement for a single data set for logspline density estimation, we developed a new algorithm to select knots for multiple data sets in an optimal manner. This algorithm consists of four steps. Firstly, the initial number of knots is selected using $2(n^*)^{1/5}$ where $n^*$ depends on the number of observations of each data set $\{n_t\}_{t=1}^T$. We propose $n^*$ as the average number of observations, $\bar{n}$. This choice is theoretically supported using a large sample inference for a logspline density estimator with common knots as $\Big\lVert \hat{f}_t(y) - f_t(y) \Big\rVert_2 = O \left( \bar{n}^{-\xi} \right)$ where $f_t(y) = f_t(y;\bm{\theta}_t)$ is the density function at time $t$, $\hat{f}_t(y) = f_t(y;\bm{\hat{\theta}}_t)$ is the logspline density estimate of $f_t(y)$, $\xi = \frac{d}{(2d+1)}$, and $d (> 0.5)$ depends on the smoothness condition of $f_t(y)$ \citep{Stone1990}. Hence, the number of initial knots is taken as $2\bar{n}^{1/5}$. The power $1/5$ is used based on a recommendation by \citet{KooperbergStone1991}, and the multiple $2$ is somewhat arbitrary and mainly as a result of experience.
+By using the ideas of the knot placement for a single data set for logspline density estimation, we developed a new algorithm to select knots for multiple data sets in an optimal manner. This algorithm consists of four steps. Firstly, the initial number of knots is selected using $2(n^*)^{1/5}$ where $n^*$ depends on the number of observations of each data set $\{n_t\}_{t=1}^T$. We propose $n^*$ as the average number of observations, $\bar{n}$. This choice is theoretically supported using a large sample inference for a logspline density estimator with common knots as $\Big\lVert \hat{f}_t(y) - f_t(y) \Big\rVert_2 = O \left( \bar{n}^{-\xi} \right)$ where $f_t(y) = f_t(y;\bm{\theta}_t)$ is the density function at time $t$, $\hat{f}_t(y) = f_t(y;\bm{\hat{\theta}}_t)$ is the logspline density estimate of $f_t(y)$, $\xi = \frac{d}{(2d+1)}$, and $d (> 0.5)$ depends on the smoothness condition of $f_t(y)$ [@Stone1990]. Hence, the number of initial knots is taken as $2\bar{n}^{1/5}$. The power $1/5$ is used based on a recommendation by @KooperbergStone1991, and the multiple $2$ is somewhat arbitrary and mainly as a result of experience.
 
-Initial knots are placed in the second step of the algorithm. Originally, we placed two boundary knots at the first- and last-order statistics of the pooled data ($\text{min}(y)$ and $\text{max}(y)$). However, because of the linear tail restrictions on the basis functions, we found that placing the boundary knots beyond the first- and last-order statistics works relatively well in practice. We place $k'_1 = \text{min}(y) - \lambda$ and $k'_K = \text{max}(y) + \lambda$ where $\lambda = (\text{max}(y) - \text{min}(y))/4$. If a log transformation is considered for the density estimation and $k'_1 = \text{min}(y) - \lambda$ is non-positive, we consider $k'_1 =\text{min}(y)$. In this paper, we use a close approximation of the Chebyshev procedure \citep{DeBoor1978} to place the initial knots $K_{\text{int}}$, which splits the semicircle into $N-1$ arcs of equal length to select $N$ points over an interval $[\text{min}(y),\text{max}(y)]$.
+Initial knots are placed in the second step of the algorithm. Originally, we placed two boundary knots at the first- and last-order statistics of the pooled data ($\text{min}(y)$ and $\text{max}(y)$). However, because of the linear tail restrictions on the basis functions, we found that placing the boundary knots beyond the first- and last-order statistics works relatively well in practice. We place $k'_1 = \text{min}(y) - \lambda$ and $k'_K = \text{max}(y) + \lambda$ where $\lambda = (\text{max}(y) - \text{min}(y))/4$. If a log transformation is considered for the density estimation and $k'_1 = \text{min}(y) - \lambda$ is non-positive, we consider $k'_1 =\text{min}(y)$. In this paper, we use a close approximation of the Chebyshev procedure [@DeBoor1978] to place the initial knots $K_{\text{int}}$, which splits the semicircle into $N-1$ arcs of equal length to select $N$ points over an interval $[\text{min}(y),\text{max}(y)]$.
 
 After obtaining the number and locations of the initial knots, the next step of the algorithm involves the stepwise addition of knots. The BIC criterion is used for the knot addition: $-2\log L(\cdot) + \tau p$ where $L(\cdot)$ is the log-likelihood function in \eqref{maximumlikelihood}, $p$ is the number of parameters in the model, and the penalty parameter $\tau = \log n$ where $n$ is the sample size. We calculate the BIC value for each data set and for each knot interval $(k'_1,k'_2),\dots,(k'_{K-1},k'_K)$. For each knot interval, the average BIC value over all data sets is then calculated. The potential knot with the smallest average BIC is added to the model. Knots are added until the maximum number of knots $3\bar{n}^{1/5}$ is reached and the multiple $3$ is chosen based on experience. In the final step, the least important knots are removed successively during stepwise knot deletion where the BIC is also used to measure importance. This procedure is repeated until there are five knots left.
 
@@ -112,7 +112,7 @@ The splines are constructed in such a way that any linear combination of the spl
 \theta_{1,1} < 0,\dots,\theta_{t,1} < 0,\dots,\theta_{T,1} < 0 \hspace{0.3cm} \text{and} \hspace{0.3cm} \theta_{1,p} < 0,\dots,\theta_{t,p} < 0,\dots,\theta_{T,p} < 0.
 \end{equation}
 
-For some data sets (e.g., income data), the logspline estimation process could be applied to log data instead of original data. After density estimation has been performed on the log data, it is a common practice that there will be a spike at the left end. \citet{Silverman1986} discussed an approach of using reflection as a remedy for this spike, while \citet{WandMarronRuppert1991} indicated another possibility by modifying the family of transformations to ensure that less mass is spread below zero. We found another possibility for removing the spike by constraining the first parameter of the log transformed model. When a log transformation is considered for the density estimation, the sufficient conditions for feasible parameters on the log space are:
+For some data sets (e.g., income data), the logspline estimation process could be applied to log data instead of original data. After density estimation has been performed on the log data, it is a common practice that there will be a spike at the left end. @Silverman1986 discussed an approach of using reflection as a remedy for this spike, while @WandMarronRuppert1991 indicated another possibility by modifying the family of transformations to ensure that less mass is spread below zero. We found another possibility for removing the spike by constraining the first parameter of the log transformed model. When a log transformation is considered for the density estimation, the sufficient conditions for feasible parameters on the log space are:
 \begin{equation}\label{newconstrainedparameters1}
 \eta_{1,1} < \frac{1}{D^{(1)}_1(z)},\dots,\eta_{t,1} < \frac{1}{D^{(1)}_1(z)},\dots,\eta_{T,1} < \frac{1}{D^{(1)}_1(z)}
 \hspace{0.3cm} \text{and} \hspace{0.3cm}
@@ -120,7 +120,7 @@ For some data sets (e.g., income data), the logspline estimation process could b
 \end{equation}
 where $D^{(1)}_1(z)$ is the first derivative of the first basis function for $Z$. As we use fixed basis functions for each time period, the threshold $\frac{1}{D^{(1)}_1(z)}$ for the first parameter is the same for each $t$. Constraining the first parameter vector with this positive threshold results that the left end of the back-transformed density function goes to zero, with no spike.
 
-It is well known that optimisation algorithms converge to the solution quickly if the initial parameters are close to the optimal values. In finding the initial parameters, we follow \citet{Jin1990} and \citet{Kooperberg1991}. The idea behind constructing initial parameters is minimising the $L_2$ distance from the score function to its logspline approximation relative to the (empirical) density. We found the initial parameters solving the linear equation:
+It is well known that optimisation algorithms converge to the solution quickly if the initial parameters are close to the optimal values. In finding the initial parameters, we follow @Jin1990 and @Kooperberg1991. The idea behind constructing initial parameters is minimising the $L_2$ distance from the score function to its logspline approximation relative to the (empirical) density. We found the initial parameters solving the linear equation:
 $U\hat{\bm{\eta}}^* = V$
 where $U$ is a $p \times p$ matrix with elements
 $u_{k,j} = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} D^{(1)}_k(z_{t,i}) D^{(1)}_j(z_{t,i})$
@@ -133,7 +133,7 @@ When original data are used for the density estimation, and if the initial param
 # Conditional logspline with adaptive polynomial framework
 \label{ES1.2:sec:conditionallogsplinewithfullsplinesframework}
 
-In Section~\ref{ES1.1:sec:logsplinewithcommonknots}, we proposed a method using logspline density estimation to estimate the densities independently for every year, ignoring all other years. Under normal circumstances, it is reasonable to assume that these univariate densities are related to the ones in nearby years, and it is natural to account the nearby years to the density estimation of a particular year. This is the notion behind the `conditional density estimation'. \citet{MasseTruong1999} proposed a spline-based conditional logspline density estimation method which applies to bivariate data where both response and conditioning variables are continuous. In this section, we propose a modified version of the conditional method with two features: conditional density estimation with the discrete support of the conditioning variable, time $T'$; optimising spline degree---we not only choose the optimal knots but also optimise the spline degree of the density estimate. The concept of selecting the optimal spline degree for $B$-spline basis functions has also been used in the R package crs \citep{RacineNieRipley2014}.
+In Section~\ref{ES1.1:sec:logsplinewithcommonknots}, we proposed a method using logspline density estimation to estimate the densities independently for every year, ignoring all other years. Under normal circumstances, it is reasonable to assume that these univariate densities are related to the ones in nearby years, and it is natural to account the nearby years to the density estimation of a particular year. This is the notion behind the `conditional density estimation'. @MasseTruong1999 proposed a spline-based conditional logspline density estimation method which applies to bivariate data where both response and conditioning variables are continuous. In this section, we propose a modified version of the conditional method with two features: conditional density estimation with the discrete support of the conditioning variable, time $T'$; optimising spline degree---we not only choose the optimal knots but also optimise the spline degree of the density estimate. The concept of selecting the optimal spline degree for $B$-spline basis functions has also been used in the R package crs [@RacineNieRipley2014].
 
 Let $f(y|t)$ be the conditional density function of $Y$ given $T' = t$. $f(y|t)$ is modelled using sets of basis functions on $Y$ and $T'$. We generate a set of $B$-spline basis functions on $Y$ as in Section~\ref{ES1.1:sec:logsplinewithcommonknots} and specify the candidate polynomial degrees of the basis functions from 2 to 10. In contrast, the basis functions in the $T'$ dimension are treated as piecewise cubic polynomials with a fixed degree value 3, and they are generated as follows. Let $J (\geq 3)$ be the number of knots in the $T'$ dimension and let $-\infty < k''_1 < \dots < k''_J < \infty$ be a knot sequence. Set $q = J - 1$. Let $B$-spline basis functions in the $T'$ dimension be $G_0(t) \equiv 1,G_1(t),\dots,G_q(t)$. The boundary basis functions on $T'$ are the same as the ones on $Y$ so that $G_1(t)$ is linear with a negative slope on $(-\infty,k''_1]$; $G_2(t),\dots,G_q(t)$ are constant on $(-\infty,k''_1]$; $G_q(t)$ is linear with a positive slope on $[k''_J,\infty)$; and $G_1(t),\dots,G_{q-1}(t)$ are constant on $[k''_J,\infty)$.
 
@@ -141,15 +141,10 @@ The univariate logspline model is extended to the conditional logspline model as
 \begin{equation}
 \text{log} f(y|t;\bm{\alpha}) = \sum\limits_{k=0}^{p} \theta_k(t) B_k(y),
 \end{equation}
-$\theta_0(t) = -\text{log} \left\{ \int_\mathds{R} \text{exp} \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right) \hspace{0.1cm} \text{d}y \right\}
-\hspace{0.3cm} \text{and} \hspace{0.3cm}
-\theta_k(t) = \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t), \hspace{0.2cm} k=1,\dots,p$
-where $\bm{\alpha} = \{\alpha_{j,k}\} \in \mathcal{A}$ are parameters for $j=0,\dots,q$ and $k=1,\dots,p$, and $\theta_0(t)$ is the normalising constant so that $\int_\mathds{R} f(y|t;\bm{\alpha}) \hspace{0.1cm} \text{d}y = 1$.
+$\theta_0(t) = -\text{log} \left\{ \int_\mathds{R} \text{exp} \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right)\text{d}y \right\}$ and $\theta_k(t) = \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t)$, $k=1,\dots,p$ where $\bm{\alpha} = \{\alpha_{j,k}\} \in \mathcal{A}$ are parameters for $j=0,\dots,q$ and $k=1,\dots,p$, and $\theta_0(t)$ is the normalising constant so that $\int_\mathds{R} f(y|t;\bm{\alpha}) \hspace{0.1cm} \text{d}y = 1$.
 
 The log-likelihood function of the conditional logspline model with a discrete conditioning variable is defined by:
-$
-L(\bm{\alpha})  = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \text{log} f(y_{t,i}|t;\bm{\alpha}) = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y_{t,i}) - a(\bm{\alpha}) \right)
-$
+$L(\bm{\alpha})  = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \text{log} f(y_{t,i}|t;\bm{\alpha}) = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y_{t,i}) - a(\bm{\alpha}) \right)$
 where $a(\bm{\alpha}) = \text{log} \left\{ \int_\mathds{R} \text{exp} \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right) \hspace{0.1cm} \text{d}y \right\}$.
 
 \subsection{Knots and spline degree selection}
@@ -171,13 +166,13 @@ In Section~\ref{ES1.1:subsec:constrainedoptimization}, we proposed a constrained
 \end{equation}
 where $\bm{\phi} = \{\phi_{j,k}\} \in \Phi$ is a set of parameters on log space for $j=0,\dots,q$ and $k=1,\dots,p$.
 
-\citet{MasseTruong1999} modified \citet{Kooperberg1991}'s approach into the conditional situation by minimising the $L_2$ distance from the score function to its conditional logspline approximation relative to the (empirical) bivariate density. We adapted \citet{MasseTruong1999}'s approach in finding the initial parameters when the conditional density has a discrete support on the conditioning variable. When original data are used for the density estimation, and if the initial parameters produced by this method do not satisfy the tail constraints in \eqref{constrainedparametersconditional}, the constraints are imposed directly. When log data are used, and if the initial parameters do not satisfy the tail constraints in \eqref{newconstrainedparametersconditional}, the constraints are imposed directly.
+@MasseTruong1999 modified @Kooperberg1991's approach into the conditional situation by minimising the $L_2$ distance from the score function to its conditional logspline approximation relative to the (empirical) bivariate density. We adapted @MasseTruong1999's approach in finding the initial parameters when the conditional density has a discrete support on the conditioning variable. When original data are used for the density estimation, and if the initial parameters produced by this method do not satisfy the tail constraints in \eqref{constrainedparametersconditional}, the constraints are imposed directly. When log data are used, and if the initial parameters do not satisfy the tail constraints in \eqref{newconstrainedparametersconditional}, the constraints are imposed directly.
 
 # Conditional logspline with kernel weights
 \label{EK1.3:sec:conditionallogsplinewithkernelweigths}
 
 This section proposes an alternative method for estimating conditional densities combining two density estimation approaches: logspline and kernel.
-Our suggested method integrates the logspline approach with kernel weights to account for time variations in estimating the conditional density of $Y$ conditional on $T'=t$. This weight function $w(t)$ was proposed by \citet{HyndmanBashtannykGrunwald1996} for conditional kernel density estimation with continuous response and conditioning variables. It accounts for the neighbouring years in the estimate of the density of a particular year such that it gets the most weight, while the years before and after the specific year get less weight. This results in a series of estimated densities that change slowly over time, with neighbouring densities that are similar but not identical.
+Our suggested method integrates the logspline approach with kernel weights to account for time variations in estimating the conditional density of $Y$ conditional on $T'=t$. This weight function $w(t)$ was proposed by @HyndmanBashtannykGrunwald1996 for conditional kernel density estimation with continuous response and conditioning variables. It accounts for the neighbouring years in the estimate of the density of a particular year such that it gets the most weight, while the years before and after the specific year get less weight. This results in a series of estimated densities that change slowly over time, with neighbouring densities that are similar but not identical.
 
 The proposed conditional logspline with kernel weights model is:
 \begin{equation}\label{objective1.3model}
@@ -218,7 +213,7 @@ where $r_{-t}(\bm{\theta},h) = \log \left\{ \int_\mathds{R} \exp \left( {\sum\li
 # Conditional kernel estimation
 \label{EK1.4:sec:conditionalkerneestimation}
 
-Bandwidth selection is the most important aspect of the kernel density estimation. After the introduction of conditional kernel density, \citet{BashtannykHyndman2001} proposed several bandwidth selection approaches ranging from fast rule-of-thumb approaches to slow hi-tech approaches with continuous response and conditioning variables. In this section, we propose two bandwidth selection approaches for the conditional kernel estimation with the discrete conditioning variable.
+Bandwidth selection is the most important aspect of the kernel density estimation. After the introduction of conditional kernel density, @BashtannykHyndman2001 proposed several bandwidth selection approaches ranging from fast rule-of-thumb approaches to slow hi-tech approaches with continuous response and conditioning variables. In this section, we propose two bandwidth selection approaches for the conditional kernel estimation with the discrete conditioning variable.
 
 The conditional kernel density estimator of $Y$ given $T'=t$ is:
 \begin{equation}\label{cdf}
@@ -251,14 +246,14 @@ Assuming the conditional distribution is normal with linear mean $\delta_1 + \de
 \end{equation}
 where $\hat{h}_t$ is the optimal bandwidth of $h_t$.
 
-We have observed that $\hat{h}_t$ could not be found by differentiating \eqref{IMSE2} with respect to $h_t$. Alternatively, we use $\hat{h}_t$ expression of \citewiths{BashtannykHyndman2001} URR method. They assumed continuous conditioning variable is uniformly distributed over the sample space. Our conditioning variable is non-random discrete and uniformly distributed if approximately the same number of observations exist in each year. Therefore, assuming that the conditioning variable is uniformly distributed, the optimal bandwidth in the $T'$ dimension is found from \citet[][p. 286]{BashtannykHyndman2001}:
+We have observed that $\hat{h}_t$ could not be found by differentiating \eqref{IMSE2} with respect to $h_t$. Alternatively, we use $\hat{h}_t$ expression of @BashtannykHyndman2001 URR method. They assumed continuous conditioning variable is uniformly distributed over the sample space. Our conditioning variable is non-random discrete and uniformly distributed if approximately the same number of observations exist in each year. Therefore, assuming that the conditioning variable is uniformly distributed, the optimal bandwidth in the $T'$ dimension is found from @BashtannykHyndman2001, p286:
 \begin{equation}\label{h_t^*}
 \hat{h}_t = \left\{ \frac{4\sqrt{\pi}R^2(K)T\delta_3^5}{3n\sigma^4_K \delta_2^5} \right\}^{1/6}.
 \end{equation}
 
 \subsubsection*{A plug-in bandwidth selection approach}
 
-Following \citet{HallMarron1987} and \citet{WandMarronRuppert1991}, a new plug-in bandwidth selection approach is developed in this section. This approach plugs a value for the integrated squared derivatives of the conditional density where the unknown conditional density estimator is considered normal.
+Following @HallMarron1987 and @WandMarronRuppert1991, a new plug-in bandwidth selection approach is developed in this section. This approach plugs a value for the integrated squared derivatives of the conditional density where the unknown conditional density estimator is considered normal.
 
 The integrated squared $r$ derivative of conditional kernel density estimator of $f(y|t)$ is:
 \begin{equation}\label{integrated_squared}
@@ -267,7 +262,7 @@ The integrated squared $r$ derivative of conditional kernel density estimator of
 \end{equation}
 where $K^{(r)}(\cdot)$ is the $r$ derivative of the kernel function.
 
-Following \citewiths{HallMarron1987} idea in univariate density estimation, we propose the integrated squared second derivative of the conditional kernel density estimator of $f(y|t)$:
+Following @HallMarron1987 idea in univariate density estimation, we propose the integrated squared second derivative of the conditional kernel density estimator of $f(y|t)$:
 \begin{equation}\label{wand}
 \int_\mathds{R} \left( \hat{f}^{(2)}(y|t) \right)^2 \hspace{0.2cm} \text{d}y = \frac{ \frac{1}{h_y^5} \mathop{\sum\limits_{s_2=1}^{T} \sum\limits_{s_1=1}^{T} \sum\limits_{j=1}^{n_{s_2}} \sum\limits_{i=1}^{n_{s_1}}}_{i \neq j} K \left( \frac{t-T'_{s_1}}{h_t} \right) K \left( \frac{t-T'_{s_2}}{h_t} \right) K^{(4)} \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right) }
 { \left( \sum\limits_{s=1}^{T} n_s K \left( \frac{t-T'_s}{h_t} \right) \right)^2 }
@@ -277,7 +272,7 @@ We choose the Gaussian $\mathcal{N}(0,h^2_y)$ kernel function in the $Y$ dimensi
 \begin{equation}\label{Kernel^4}
 \frac{1}{h_y^5} K^{(4)} \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right) = \frac{1}{\sqrt{2\pi} h_y^5} \exp \left\{ -\frac{z}{2} \right\} \left( z^2 - 6z + 3 \right).
 \end{equation}
-where $z = \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right)^2$. Following \citewiths{WandMarronRuppert1991} idea in univariate density estimation, $h_y$ is defined as $h_y = \sqrt{2}h'_y$ where the pilot bandwidth $h'_y = \hat{\sigma}_Y \left( \frac{84\sqrt{\pi}}{5\bar{n}^2} \right)^{1/13}$, $\hat{\sigma}_Y$ is the standard deviation of pooled $Y$ data and $\bar{n}$ is the average number of observations.
+where $z = \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right)^2$. Following @WandMarronRuppert1991 idea in univariate density estimation, $h_y$ is defined as $h_y = \sqrt{2}h'_y$ where the pilot bandwidth $h'_y = \hat{\sigma}_Y \left( \frac{84\sqrt{\pi}}{5\bar{n}^2} \right)^{1/13}$, $\hat{\sigma}_Y$ is the standard deviation of pooled $Y$ data and $\bar{n}$ is the average number of observations.
 
 Substituting \eqref{Kernel^4} into \eqref{wand}, we get the integrated squared second derivative of the conditional density kernel density estimator of $f(y|t)$:
 \begin{equation}\label{plugin}
@@ -531,7 +526,7 @@ Combining the logspline density estimation method with kernel weights, we obtain
   \label{Est4_Results}
 \end{table}
 
-We implemented two existing bandwidth selection approaches in \citet{BashtannykHyndman2001}---the URR and the bootstrap approach---with our continuous response variable $Y$ and the discrete conditioning variable $T'$. The existing approaches assume that both response and conditioning variables are continuous random variables. The discreteness in the conditioning variable conflicts with the theory behind the existing approaches, although it works in practice. Also, we implemented two bandwidth selection approaches proposed in this paper.
+We implemented two existing bandwidth selection approaches in @BashtannykHyndman2001---the URR and the bootstrap approach---with our continuous response variable $Y$ and the discrete conditioning variable $T'$. The existing approaches assume that both response and conditioning variables are continuous random variables. The discreteness in the conditioning variable conflicts with the theory behind the existing approaches, although it works in practice. Also, we implemented two bandwidth selection approaches proposed in this paper.
 
 A careful examination of the conditional kernel plots (not included in this paper) reveals that the conditional densities from the bootstrap method differ from the conditional densities obtained using the other three bandwidth selection methods. This may be because the other three methods are related. Both the URR and the discrete URR assumes that the underlying conditional density is normal. The plug-in approach plugs in a value for the second derivative of the conditional density; however, the pilot distribution is also considered normal. A summary of the bandwidths of four bandwidth selection methods is presented in Table \ref{Est4_Results}. The bandwidths in the $T'$ and $Y$ dimensions are shown in columns $h_t$ and $h_y$ respectively.
 
@@ -540,15 +535,12 @@ A careful examination of the conditional kernel plots (not included in this pape
 
 After the estimated densities have been obtained, it is necessary to assess how close they are to the actual densities. In the usual density evaluation, a series of densities over a certain period is considered to have one observation for every time period. Nonetheless, in this paper, we have thousands of observations for each time period. Therefore, we propose the following method for evaluating the reliability of density estimates.
 
-Let $f_t(y)$ and $\hat{f}_t(y)$ be the true density and estimated density at time $t$ respectively. Each density has thousands of observations. Given that the estimates should be evaluated by assessing whether the estimated densities are correct, we test whether the collection of estimated densities is equal to the collection of true densities:
-$
-\{ f_t(y) \}_{t=1}^T = \{ \hat{f}_t(y) \}_{t=1}^T.
-$
+Let $f_t(y)$ and $\hat{f}_t(y)$ be the true density and estimated density at time $t$ respectively. Each density has thousands of observations. Given that the estimates should be evaluated by assessing whether the estimated densities are correct, we test whether the collection of estimated densities is equal to the collection of true densities: $\{f_t(y)\}_{t=1}^T = \{ \hat{f}_t(y) \}_{t=1}^T$.
 It is difficult to test this null hypothesis, as the true density $\hat{f}_t(y)$ is never obtained for real data sets. However, the properties of the following modified probability integral transformation provide the solution to this problem:
 \begin{equation}\label{pit}
 \left\{ \{ u_{t,j} \}_{j=1}^{n_t} = \left\{ \int_{-\infty}^{y_{t,j}} \hat{f}_{t,j}(v) \hspace{0.2cm} \text{d}v \right\}_{j=1}^{n_t} \right\}_{t=1}^T
 \end{equation}
-\citet{Rosenblatt1952} showed that the distribution of PIT is uniform(0,1) for the true generating density. In this situation, we assess whether the distribution of PITs under the null hypothesis is uniform(0,1). Specifically, if the realisations at time $t$, $\{ y_{t,j} \}_{j=1}^{n_t}$, come from the estimated densities at time $t$, $\hat{f}_t(y)$, then the series of PITs at time $t$, $\{ u_{t,1},\dots,u_{t,n_t} \}$, is uniform(0,1). If the series of PITs deviates from the uniform(0,1), then the estimated density at time $t$, $\hat{f}_t(y)$, is not identical to the true density, $f_t(y)$.
+@Rosenblatt1952 showed that the distribution of PIT is uniform(0,1) for the true generating density. In this situation, we assess whether the distribution of PITs under the null hypothesis is uniform(0,1). Specifically, if the realisations at time $t$, $\{ y_{t,j} \}_{j=1}^{n_t}$, come from the estimated densities at time $t$, $\hat{f}_t(y)$, then the series of PITs at time $t$, $\{ u_{t,1},\dots,u_{t,n_t} \}$, is uniform(0,1). If the series of PITs deviates from the uniform(0,1), then the estimated density at time $t$, $\hat{f}_t(y)$, is not identical to the true density, $f_t(y)$.
 
 A summary of the evaluation results of the logspline with common knots method is presented in Table \ref{Est_Evaluationresults1}. The number of uniformly distributed PIT histograms out of the total number of histograms is stated under the column `UPIT'. Kolmogorov--Smirnov test is used for testing uniformity. As the insignificant $p$-values (0.04153, 0.04621) in the sixth example are close to the significance level $0.05$, we conclude that all univariate estimated densities obtained from logspline with common knots method are not significantly different from the corresponding series of true densities.
 
@@ -568,7 +560,7 @@ A summary of the evaluation results of the logspline with common knots method is
   \label{Est_Evaluationresults1}
 \end{table}
 
-In this paper, we compare six conditional density estimation methods (two conditional logspline methods in Sections~\ref{ES1.2:sec:conditionallogsplinewithfullsplinesframework} and \ref{EK1.3:sec:conditionallogsplinewithkernelweigths}, and four bandwidth selection methods in the conditional kernel estimation in Section~\ref{EK1.4:sec:conditionalkerneestimation}) using four proper scoring rules: LS, QS, SS and CRPS. Proper scoring rules assess calibration and sharpness simultaneously, and the method producing the lowest proper scoring rule score is preferred \citep{GneitingBalabdaouiRaftery2007,GneitingKatzfus2014,GneitingRaftery2007}. A summary of the evaluation results of these methods for six examples is presented in Tables \ref{Est_Comparisonresults1}--\ref{Est_Comparisonresults6}. Blue-coloured bold values and black-coloured bold values denote the minimum and next minimum values of proper scoring rules respectively. As shown in Tables \ref{Est_Comparisonresults1}--\ref{Est_Comparisonresults6}, two conditional logspline methods outperform four bandwidth selection methods in conditional kernel estimation, and the bootstrap method performs better than the other three bandwidth selection methods in conditional kernel density estimation. However, it can be seen that four types of scores are extremely close. Therefore, the statistical significance of the scores is evaluated to test the equal estimation performance.
+In this paper, we compare six conditional density estimation methods (two conditional logspline methods in Sections~\ref{ES1.2:sec:conditionallogsplinewithfullsplinesframework} and \ref{EK1.3:sec:conditionallogsplinewithkernelweigths}, and four bandwidth selection methods in the conditional kernel estimation in Section~\ref{EK1.4:sec:conditionalkerneestimation}) using four proper scoring rules: LS, QS, SS and CRPS. Proper scoring rules assess calibration and sharpness simultaneously, and the method producing the lowest proper scoring rule score is preferred [@GneitingBalabdaouiRaftery2007;@GneitingKatzfus2014;@GneitingRaftery2007]. A summary of the evaluation results of these methods for six examples is presented in Tables \ref{Est_Comparisonresults1}--\ref{Est_Comparisonresults6}. Blue-coloured bold values and black-coloured bold values denote the minimum and next minimum values of proper scoring rules respectively. As shown in Tables \ref{Est_Comparisonresults1}--\ref{Est_Comparisonresults6}, two conditional logspline methods outperform four bandwidth selection methods in conditional kernel estimation, and the bootstrap method performs better than the other three bandwidth selection methods in conditional kernel density estimation. However, it can be seen that four types of scores are extremely close. Therefore, the statistical significance of the scores is evaluated to test the equal estimation performance.
 
 \begin{table}
   \centering
@@ -672,7 +664,7 @@ In this paper, we compare six conditional density estimation methods (two condit
   \label{Est_Comparisonresults6}
 \end{table}
 
-The significance of the scores is statistically tested using the Diebold--Mariano test \citep[][p. 137]{GneitingKatzfus2014}. This is a paired t-test that can be used to test for equal performance of two competing reliable density estimation methods. By performing paired t-tests, we can conclude that two conditional logspline methods do not differ in performance in producing sharp density estimates; however, they perform better than four bandwidth selection methods in conditional kernel estimation.
+The significance of the scores is statistically tested using the Diebold--Mariano test [@GneitingKatzfus2014, p.137]. This is a paired t-test that can be used to test for equal performance of two competing reliable density estimation methods. By performing paired t-tests, we can conclude that two conditional logspline methods do not differ in performance in producing sharp density estimates; however, they perform better than four bandwidth selection methods in conditional kernel estimation.
 
 # Computational efficiency
 \label{APP:sec:computationalefficiency}
@@ -736,29 +728,22 @@ and:
 \end{equation*}
 
 If roughly the same number of observations is taken for each data set, $n_s = n_t$ and hence, $m_s = m_t$. Then, we get:
-$
-\text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = \sum\limits_{u} K(u) q(y|(t-uh_t)) m_t \hspace{0.2cm} \text{where} \hspace{0.2cm} u=\frac{t-s}{h_t}.
-$
+$\text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = \sum\limits_{u} K(u) q(y|(t-uh_t)) m_t \hspace{0.2cm} \text{where} \hspace{0.2cm} u=\frac{t-s}{h_t}.$
 
 With different $s$ values, $q(y|t)$ could be estimated as:
 $q(y|t) = \frac{1}{h_t} \sum\limits_{s=1}^T K \left( \frac{t-s}{h_t} \right) q(y|s)$.
 
 Then we could write:
 $q(y|s) = q(y|(t-uh_t)) = q(y|t) + O \left( h_t \right)$
-and \\
-$
-\text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = \sum\limits_{u} K(u) \left[ q(y|t) + uh_tq'(y|t) + O \left( h_t^2 \right) \right] m_t.
-$
+and
+$$\text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = \sum\limits_{u} K(u) \left[ q(y|t) + uh_tq'(y|t) + O \left( h_t^2 \right) \right] m_t.
+$$
 
 Therefore, the expectation becomes:
-$
-\text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = q(y|t)m_t + O \left( h_t^2 \right).
-$
+$\text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = q(y|t)m_t + O \left( h_t^2 \right).$
 
 Using a similar argument, we obtain \eqref{lemma1.2}. Then using \eqref{lemma1.1} and \eqref{lemma1.2}, \eqref{lemma1.3} is derived as follows:
-$
-\text{var} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = \text{E} \left[ \frac{1}{h_t^2} K^2 \left( \frac{t-T'}{h_t} \right) q^2(y|T') \right] - \left\{ \text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] \right\}^2.
-$
+$\text{var} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = \text{E} \left[ \frac{1}{h_t^2} K^2 \left( \frac{t-T'}{h_t} \right) q^2(y|T') \right] - \left\{ \text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] \right\}^2.$
 
 \subsection{Derivations}
 
@@ -773,10 +758,8 @@ The asymptotic bias and the variance of the conditional density estimator $\hat{
 \subsection*{Proof:}
 
 The conditional density estimator can be expressed as the ratio of two random variables:
-$
-\hat{f}(y|t) = \frac{ \frac{1}{n} \sum\limits_{s=1}^{T} \sum\limits_{j=1}^{n_s} q_1(T'_s,Y_{s,j}) } {\frac{1}{n} \sum\limits_{s=1}^{T} \sum\limits_{j=1}^{n_s} q_2(T'_s)}
-$
-where $q_1(T'_s,Y_{s,j})$ and $q_2(T'_s)$ are two random variables with means $\mu_1$ and $\mu_2$ and variances $\sigma_1^2$ and $\sigma_2^2$ respectively, and with the covariance $\sigma_{12}^2$. Following Lemma 2 in \citet[][pp. 333-335]{HyndmanBashtannykGrunwald1996}, the expected value and the variance of the estimator $\hat{f}(y|t)$ can be taken as:
+$\hat{f}(y|t) = \frac{ \frac{1}{n} \sum\limits_{s=1}^{T} \sum\limits_{j=1}^{n_s} q_1(T'_s,Y_{s,j}) } {\frac{1}{n} \sum\limits_{s=1}^{T} \sum\limits_{j=1}^{n_s} q_2(T'_s)}$
+where $q_1(T'_s,Y_{s,j})$ and $q_2(T'_s)$ are two random variables with means $\mu_1$ and $\mu_2$ and variances $\sigma_1^2$ and $\sigma_2^2$ respectively, and with the covariance $\sigma_{12}^2$. Following Lemma 2 in @HyndmanBashtannykGrunwald1996, pp.333--335, the expected value and the variance of the estimator $\hat{f}(y|t)$ can be taken as:
 \begin{equation}\label{expectation}
 \text{E} [\hat{f}(y|t)] \approx \frac{\mu_1}{\mu_2} + \frac{1}{n} \left( \frac{\mu_1 \sigma_2^2}{\mu_2^3} - \frac{\sigma_{12}^2}{\mu_2^2} \right)
 \end{equation}
@@ -786,70 +769,54 @@ where $q_1(T'_s,Y_{s,j})$ and $q_2(T'_s)$ are two random variables with means $\
 
 \underline{Finding $\mu_2$ and $\sigma_2^2$} \\
 By applying Lemma in Section~\ref{ourlemma}, we obtain:
-$
-\mu_2 = \text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'_s}{h_t} \right) \right] = m_t + O \left( h_t^2 \right)
-$
+$\mu_2 = \text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'_s}{h_t} \right) \right] = m_t + O \left( h_t^2 \right)$
 and \\
-$
-\sigma_2^2 = \text{var} \left[ \frac{1}{h_t} K \left( \frac{t-T'_s}{h_t} \right) \right] = m_t \left[ \frac{R(K)}{h_t} - m_t \right] + O \left( h_t \right).
-$
+$\sigma_2^2 = \text{var} \left[ \frac{1}{h_t} K \left( \frac{t-T'_s}{h_t} \right) \right] = m_t \left[ \frac{R(K)}{h_t} - m_t \right] + O \left( h_t \right).$
 
 \underline{Finding $\mu_1$} \\
 Conditioning on $T'_s$, the expectation:
-$
-\text{E} \left[ \frac{1}{h_t h_y} K \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right] = \frac{1}{h_t} K \left( \frac{t-T'_s}{h_t} \right) \text{E} \left[ \frac{1}{h_y} K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right].
-$
+$\text{E} \left[ \frac{1}{h_t h_y} K \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right] = \frac{1}{h_t} K \left( \frac{t-T'_s}{h_t} \right) \text{E} \left[ \frac{1}{h_y} K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right].$
 
-Then applying Lemma 1 in \citet[][pp. 331-332]{HyndmanBashtannykGrunwald1996} gives:
+Then applying Lemma 1 in @HyndmanBashtannykGrunwald1996, pp.331--332, gives:
 \begin{equation}\label{helpof(1)}
 \frac{1}{h_t} K \left( \frac{t-T'_s}{h_t} \right) \text{E} \left[ \frac{1}{h_y} K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right] = \frac{1}{h_t} K \left( \frac{t-T'_s}{h_t} \right) \left[ f(y|T'_s) + \frac{h_y^2 \sigma_K^2}{2} \frac{\partial^2 f(y|T'_s)}{\partial y^2} + O \left( h_y^4 \right) \right].
 \end{equation}
 
 Applying Lemma in Section~\ref{ourlemma} gives the unconditional expectation: \\
-$
-\mu_1 = \text{E} \left[ \text{E} \left[ \frac{1}{h_t h_y} K \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right] \right] = m_t \left[ f(y|t) + \frac{h_y^2 \sigma_K^2}{2} \frac{\partial^2 f(y|t)}{\partial y^2} \right] + O \left( h_y^4 \right) + O \left( h_t^2 \right).
-$
+$\mu_1 = \text{E} \left[ \text{E} \left[ \frac{1}{h_t h_y} K \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right] \right] = m_t \left[ f(y|t) + \frac{h_y^2 \sigma_K^2}{2} \frac{\partial^2 f(y|t)}{\partial y^2} \right] + O \left( h_y^4 \right) + O \left( h_t^2 \right).$
 
 \underline{Finding $\sigma_1^2$} \\
-$
-\sigma_1^2 = \text{var} \left[ \frac{1}{h_t h_y} K \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) \right]
-$
+$\sigma_1^2 = \text{var} \left[ \frac{1}{h_t h_y} K \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) \right]$
 can be re-written as:
-$
-\sigma_1^2 = V_1 + V_2
-$
+$\sigma_1^2 = V_1 + V_2$
 where \\
 $V_1 = \text{var} \left[ \text{E} \left[ \frac{1}{h_t h_y} K \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right] \right]$
 and $V_2 = \text{E} \left[ \text{var} \left[ \frac{1}{h_t h_y} K \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right] \right]$.
 
 To find $V_1$, get the variance of \eqref{helpof(1)}:
-$
-V_1 = f^2(y|t)m_t \left[ \frac{R(K)}{h_t} - m_t \right] + O \left( h_y^2 \right) + O \left( h_t \right) + O \left( \frac{h_y^2}{h_t} \right).
-$
+$V_1 = f^2(y|t)m_t \left[ \frac{R(K)}{h_t} - m_t \right] + O \left( h_y^2 \right) + O \left( h_t \right) + O \left( \frac{h_y^2}{h_t} \right).$
 
-To find $V_2$, firstly, apply Lemma 1 in \citet[][pp. 331-332]{HyndmanBashtannykGrunwald1996} for the variance conditioning on $T'_s$. Then the expectation of the result gives $V_2$: \\
-$
-V_2 = \frac{m_t R(K)}{h_t} \left[ f(y|t) \left[ \frac{R(K)}{h_y} - f(y|t) \right] + \frac{h_y G(K)}{2} \frac{\partial^2 f(y|t)}{\partial y^2} \right] + O \left( h_t \right) + O \left( \frac{h_y^2}{h_t} \right).
-$
+To find $V_2$, firstly, apply Lemma 1 in @HyndmanBashtannykGrunwald1996, pp.331--332, for the variance conditioning on $T'_s$. Then the expectation of the result gives $V_2$:
+$$V_2 = \frac{m_t R(K)}{h_t} \left[ f(y|t) \left[ \frac{R(K)}{h_y} - f(y|t) \right] + \frac{h_y G(K)}{2} \frac{\partial^2 f(y|t)}{\partial y^2} \right] + O \left( h_t \right) + O \left( \frac{h_y^2}{h_t} \right).$$
 
 The unconditional variance $\sigma_1^2$ is the sum of $V_1$ and $V_2$.
 
 \underline{Finding $\sigma_{12}^2$} \\
-Conditioning on $T'_s$ and applying Lemma 1 in \citet[][pp. 331-332]{HyndmanBashtannykGrunwald1996} gives:
-$
+Conditioning on $T'_s$ and applying Lemma 1 in @HyndmanBashtannykGrunwald1996, pp.331--332, gives:
+$$
 \text{E} \left[ \frac{1}{h_t^2 h_y} K^2 \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) | T'_s \right]
 = \frac{1}{h_t^2} K^2 \left( \frac{t-T'_s}{h_t} \right).\left[ f(y|T'_s) + \frac{h_y^2 \sigma_K^2}{2} \frac{\partial^2 f(y|T'_s)}{\partial y^2} + O \left( h_y^4 \right) \right].
-$
+$$
 
 Then applying Lemma in Section~\ref{ourlemma} gives: \\
-$
+$$
 \text{E} \left[ \frac{1}{h_t^2 h_y} K^2 \left( \frac{t-T'_s}{h_t} \right) K \left( \frac{y - Y_{s,j}}{h_y} \right) \right] = \frac{m_t R(K)}{h_t} \left[ f(y|t) + \frac{h_y^2 \sigma_K^2}{2} \frac{\partial^2 f(y|t)}{\partial y^2} \right] + O \left( h_t \right) + O \left( \frac{h_y^4}{h_t} \right).
-$
+$$
 
 Subtracting $\mu_1 \mu_2$ from the above expression gives the covariance: \\
-$
+$$
 \sigma_{12}^2 = m_t f(y|t) \left[ \frac{R(K)}{h_t} - m_t \right] + O \left( h_y^2 \right) + O \left( h_t \right) + O \left( h_y^2 h_t^2 \right) + O \left( \frac{h_y^2}{h_t} \right).
-$
+$$
 
 \underline{Finding the asymptotic bias of the conditional density estimator $\hat{f}(y|t)$} \\
 Using the result $1/(a+b) = 1/a - b/a^2 + O(b)$, we obtain $\frac{\mu_1}{\mu_2}$, $\frac{\mu_1 \sigma_2^2}{\mu_2^3}$ and $\frac{\sigma_{12}^2}{\mu_2^2}$. Hence, from \eqref{expectation}, we obtain \eqref{asymptoticbias}.
