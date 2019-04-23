@@ -10,7 +10,7 @@ author:
   address: Department of Econometrics & Business Statistics\newline Monash University, Clayton VIC 3800, Australia
   email: Rob.Hyndman@monash.edu
   correspondingauthor: true
-abstract: "We consider the problem of estimating a time series of density functions. A data set comprising many observations is recorded at each time period, and the associated probability density function is to be estimated for each time period. It is assumed that the densities change slowly over time and that neighbouring densities are similar but not identical.\\par We consider several methods for estimating a time series of densities: (1) A logspline approach applied to each data set separately, where each estimated density has common knots but different coefficients;  (2) A conditional logspline approach with a full splines framework to account for the time variation; (3) A conditional logspline approach applied to all data simultaneously with common knots and kernel weights to account for the time variation; (4) A conditional kernel approach with kernel weights to account for the time variation. \\par In the full splines framework, we allow the degree of the splines to change from 2 to 10, and select the optimal value based on Bayesian information criterion (BIC). For the conditional kernel estimator, we compute two new bandwidth selection approaches that explicitly account for the discrete nature of the time conditioning.\\par We apply our methods to two simulated examples (unimodal and bimodal) and four real examples. The four data sets comprise UK and Australian income and age data over many years with thousands of observations per year. Probability integral transforms and proper scoring rules such as logarithmic score, quadratic score and spherical score are used to evaluate the density estimates."
+abstract: "We consider the problem of estimating a time series of density functions. A data set comprising many observations is recorded at each time period, and the associated probability density function is to be estimated for each time period. It is assumed that the densities change slowly over time and that neighbouring densities are similar but not identical.\\par We consider several methods for estimating a time series of densities: (1) A logspline approach applied to each data set separately, where each estimated density has common knots but different coefficients; (2) A conditional logspline approach with a full splines framework to account for the time variation; (3) A conditional logspline approach applied to all data simultaneously with common knots and kernel weights to account for the time variation; (4) A conditional kernel approach with kernel weights to account for the time variation. \\par In the full splines framework, we allow the degree of the splines to change from 2 to 10, and select the optimal value based on Bayesian information criterion (BIC). For the conditional kernel estimator, we compute two new bandwidth selection approaches that explicitly account for the discrete nature of the time conditioning.\\par We apply our methods to two simulated examples (unimodal and bimodal) and four real examples. The four data sets comprise UK and Australian income and age data over many years with thousands of observations per year. Probability integral transforms and proper scoring rules such as logarithmic score, quadratic score and spherical score are used to evaluate the density estimates."
 keywords: "density estimation, functional data, kernel estimation, time series, splines, probability scoring, density evaluation, income distribution"
 wpnumber: no/yr
 jelcodes: C13, C14, C32
@@ -88,45 +88,47 @@ Thus we consider and compare four possible approaches to this problem, described
 
 Section&nbsp;\ref{APP:sec:application} compares these methods on six data sets. Then in Section&nbsp;\ref{APP:sec:evaluation}, we compare the methods using proper scoring rules, adapted to the situation involving a sequence of densities. We conclude by summarising the main findings and results in Section&nbsp;\ref{conclusions}.
 
-# Logspline with common knots
+# Logspline density estimates with common knots
 \label{ES1.1:sec:logsplinewithcommonknots}
 
-Let $K (\geq 3)$ be the number of knots and let $\{k'_k\}_{k=1}^K$ be a knot sequence with $-\infty < k'_1 < \dots < k'_K < \infty$. The knot sequence $\{k'_k\}$ is the same for each time series. Let $S$ denote the collection of twice continuously differentiable functions $s$ on $\mathds{R}$ such that the restriction of $s$ to each of the intervals $(-\infty,k'_1],[k'_1,k'_2],\dots,[k'_{K-1},k'_K],[k'_K,\infty)$ is a cubic polynomial. The space $S$ is $(K+4)$-dimensional and the functions in this space are referred to as cubic splines, which have knots at $k'_1,\dots,k'_K$. Let $S_0$ denotes the $K$-dimensional subspace of $S$ consisting of functions $s \in S$ such that $s$ is linear on $(-\infty,k'_1]$ and $[k'_K,\infty)$. Set $p = K - 1$. Then $S_0$ has a basis of the form $B_0(y)\equiv1,B_1(y),\dots,B_p(y)$, and they can be chosen such that $B_1(y)$ is linear with a negative slope on $(-\infty,k'_1]$; $B_2(y),\dots,B_p(y)$ are constant on $(-\infty,k'_1]$; $B_p(y)$ is linear with a positive slope on $[k'_K,\infty)$; and $B_1(y),\dots,B_{p-1}(y)$ are constant on $[k'_K,\infty)$.
+Let $K (\geq 3)$ be the number of knots and let $\{z_1,\dots,z_K\}$ be a knot sequence with $-\infty < z_1 < \dots < z_K < \infty$. The knot sequence $\{z_k\}$ is the same for each time series. Let $S$ denote the collection of twice continuously differentiable functions $s$ on $\mathds{R}$ such that the restriction of $s$ to each of the intervals $(-\infty,z_1],[z_1,z_2],\dots,[z_{K-1},z_K],[z_K,\infty)$ is a cubic polynomial. Thus the functions in $S$ are cubic splines with knots at $z_1,\dots,z_K$. Let $S_0$ denotes the $K$-dimensional subspace of $S$ consisting of functions $s \in S$ such that $s$ is linear on $(-\infty,z_1]$ and $[z_K,\infty)$. Set $p = K - 1$. Then $S_0$ has a basis set of the form $\{B_0(y)\equiv1,B_1(y),\dots,B_p(y)\}$, which can be chosen such that $B_1(y)$ is linear with a negative slope on $(-\infty,z_1]$; $B_2(y),\dots,B_p(y)$ are constant on $(-\infty,z_1]$; $B_p(y)$ is linear with a positive slope on $[z_K,\infty)$; and $B_1(y),\dots,B_{p-1}(y)$ are constant on $[z_K,\infty)$.
 
-Let $f_t(y;\bm{\theta}_t)$ be the probability density function of data $\{y_{t,j}\}_{j=1}^{n_t}$ given $\bm{\theta}_t = \{\theta_{t,k}\}_{k=1}^p \in \Theta$. The logspline model at time $t$ is:
+Let $\tilde{f}_t(y;\bm{\theta}_t)$ be the probability density estimate from data $\{y_{t,j}\}_{j=1}^{n_t}$ given $\bm{\theta}_t = \{\theta_{t,k}\}_{k=1}^p \in \Theta$. The logspline model at time $t$ is:
 \begin{equation}\label{mymodel}
-f_t(y;\bm{\theta}_t) = \exp \left( b_t(y;\bm{\theta}_t) - c_t(\bm{\theta}_t) \right)
+  \tilde{f}_t(y;\bm{\theta}_t) = \exp \left( b_t(y;\bm{\theta}_t) - c_t(\bm{\theta}_t) \right)
 \end{equation}
-where $b_t(y;\bm{\theta}_t) = \sum\limits_{k=1}^{p} \theta_{t,k} B_k(y)$ and $c_t(\bm{\theta}_t) = \log \left\{ \int_\mathds{R} \exp \left( b_t(y;\bm{\theta}_t) \right) \hspace{0.1cm} dy \right\}$.
+where $b_t(y;\bm{\theta}_t) = \sum\limits_{k=1}^{p} \theta_{t,k} B_k(y)$ and $c_t(\bm{\theta}_t) = \log \left\{ \int_\mathds{R} \exp \left( b_t(y;\bm{\theta}_t) \right) dy \right\}$.
 
-The two differences in \eqref{usualmodel} and \eqref{mymodel} are the number of knots ($K_t$ v. $K$) and the basis functions $\left( B_{t,k}(y) \hspace{0.1cm} \text{v.} \hspace{0.1cm} B_k(y) \right)$. Since the usual logspline density estimation approach treats every data set separately in \eqref{usualmodel}, the number of knots is different in each time series $t = 1,2,\dots,T$. Hence, the basis functions are different. However, the logspline model in \eqref{mymodel} has a fixed number and fixed locations of knots in each time series $t$; hence, the basis functions are unchanging over time.
+The differences between \eqref{usualmodel} and \eqref{mymodel} are the number of knots ($K_t$ compared to $K$) and the basis functions ($B_{t,k}(y)$ compared to $B_k(y)$). Since the usual logspline density estimation approach treats every data set separately in \eqref{usualmodel}, the number of knots is different in each time series $t = 1,2,\dots,T$, and the basis functions are different. However, the logspline model in \eqref{mymodel} has a fixed number and fixed locations of knots in each time series $t$; hence, the basis functions are unchanging over time.
 
-The optimal parameters at time $t$ are estimated maximising the log-likelihood function of the logspline density function at time $t$ is given by:
+The optimal parameters at time $t$ are estimated by maximising the log-likelihood function of the logspline density function at time $t$:
 \begin{equation}\label{maximumlikelihood}
-L_t(\bm{\theta}_t) = \sum\limits_{j=1}^{n_t} \log f_t(y_{t,j};\bm{\theta}_t)
+  L_t(\bm{\theta}_t) = \sum\limits_{j=1}^{n_t} \log f_t(y_{t,j};\bm{\theta}_t).
 \end{equation}
-@Stone1990 showed that the log-likelihood of a univariate logspline density function was a strictly concave function on $\Theta$, and that the maximum likelihood estimate $\hat{\bm{\theta}_t}$ of $\bm{\theta}_t$ was unique if it existed.
+@Stone1990 showed that the log-likelihood of a univariate logspline density function is a strictly concave function on $\Theta$, and that the maximum likelihood estimate $\hat{\bm{\theta}}_t$ of $\bm{\theta}_t$ is unique if it exists.
 
 ## Common knots selection {#ES1.1:subsec:commonknotsselection}
 
-By using the ideas of the knot placement for a single data set for logspline density estimation, we developed a new algorithm to select knots for multiple data sets in an optimal manner. This algorithm consists of four steps. Firstly, the initial number of knots is selected using $2(n^*)^{1/5}$ where $n^*$ depends on the number of observations of each data set $\{n_t\}_{t=1}^T$. We propose $n^*$ as the average number of observations, $\bar{n}$. This choice is theoretically supported using a large sample inference for a logspline density estimator with common knots as $\Big\lVert \hat{f}_t(y) - f_t(y) \Big\rVert_2 = O \left( \bar{n}^{-\xi} \right)$ where $f_t(y) = f_t(y;\bm{\theta}_t)$ is the density function at time $t$, $\hat{f}_t(y) = f_t(y;\bm{\hat{\theta}}_t)$ is the logspline density estimate of $f_t(y)$, $\xi = \frac{d}{(2d+1)}$, and $d (> 0.5)$ depends on the smoothness condition of $f_t(y)$ [@Stone1990]. Hence, the number of initial knots is taken as $2\bar{n}^{1/5}$. The power $1/5$ is used based on a recommendation by @KooperbergStone1991, and the multiple $2$ is somewhat arbitrary and mainly as a result of experience.
+By using the ideas of the knot placement for a single data set for logspline density estimation, we propose a new algorithm to select knots for multiple data sets in an optimal manner. This algorithm consists of four steps. First, the initial number of knots is set to $2(\bar{n})^{1/5}$ where $\bar{n}$ is the average number of observations of each data set $\{n_t\}_{t=1}^T$. This choice is theoretically supported using a large sample inference for a logspline density estimator with common knots as $\big\lVert \hat{f}_t(y) - f_t(y) \big\rVert_2 = O \left( \bar{n}^{-\xi} \right)$ where $f_t(y) = f_t(y;\bm{\theta}_t)$ is the density function at time $t$, $\hat{f}_t(y) = f_t(y;\bm{\hat{\theta}}_t)$ is the logspline density estimate of $f_t(y)$, $\xi = \frac{d}{(2d+1)}$, and $d (> 0.5)$ depends on the smoothness condition of $f_t(y)$ [@Stone1990]. Hence, the number of initial knots is taken as $2\bar{n}^{1/5}$. The power $1/5$ is used based on a recommendation by @KooperbergStone1991, and the multiple $2$ is somewhat arbitrary and mainly as a result of experience.
 
-Initial knots are placed in the second step of the algorithm. Originally, we placed two boundary knots at the first- and last-order statistics of the pooled data ($\text{min}(y)$ and $\text{max}(y)$). However, because of the linear tail restrictions on the basis functions, we found that placing the boundary knots beyond the first- and last-order statistics works relatively well in practice. We place $k'_1 = \text{min}(y) - \lambda$ and $k'_K = \text{max}(y) + \lambda$ where $\lambda = (\text{max}(y) - \text{min}(y))/4$. If a log transformation is considered for the density estimation and $k'_1 = \text{min}(y) - \lambda$ is non-positive, we consider $k'_1 =\text{min}(y)$. In this paper, we use a close approximation of the Chebyshev procedure [@DeBoor1978] to place the initial knots $K_{\text{int}}$, which splits the semicircle into $N-1$ arcs of equal length to select $N$ points over an interval $[\text{min}(y),\text{max}(y)]$.
+Initial knots are placed in the second step of the algorithm. Originally, we placed two boundary knots at the first- and last-order statistics of the pooled data ($\text{min}(y)$ and $\max(y)$). However, because of the linear tail restrictions on the basis functions, we found that placing the boundary knots beyond the first- and last-order statistics works relatively well in practice. We place $z_1 = \text{min}(y) - \lambda$ and $z_K = \max(y) + \lambda$ where $\lambda = (\max(y) - \text{min}(y))/4$. If a log transformation is considered for the density estimation and $z_1 = \text{min}(y) - \lambda$ is non-positive, we consider $z_1 =\text{min}(y)$. In this paper, we use a close approximation of the Chebyshev procedure [@DeBoor1978] to place the initial knots $K_{\text{int}}$, which splits the semicircle into $N-1$ arcs of equal length to select $N$ points over an interval $[\text{min}(y),\max(y)]$.
 
-After obtaining the number and locations of the initial knots, the next step of the algorithm involves the stepwise addition of knots. The BIC criterion is used for the knot addition: $-2\log L(\cdot) + \tau p$ where $L(\cdot)$ is the log-likelihood function in \eqref{maximumlikelihood}, $p$ is the number of parameters in the model, and the penalty parameter $\tau = \log n$ where $n$ is the sample size. We calculate the BIC value for each data set and for each knot interval $(k'_1,k'_2),\dots,(k'_{K-1},k'_K)$. For each knot interval, the average BIC value over all data sets is then calculated. The potential knot with the smallest average BIC is added to the model. Knots are added until the maximum number of knots $3\bar{n}^{1/5}$ is reached and the multiple $3$ is chosen based on experience. In the final step, the least important knots are removed successively during stepwise knot deletion where the BIC is also used to measure importance. This procedure is repeated until there are five knots left.
+After obtaining the number and locations of the initial knots, the next step of the algorithm involves the stepwise addition of knots. The BIC criterion is used for the knot addition: $-2\log L(\cdot) + \tau p$ where $L(\cdot)$ is the log-likelihood function in \eqref{maximumlikelihood}, $p$ is the number of parameters in the model, and the penalty parameter $\tau = \log n$ where $n$ is the sample size. We calculate the BIC value for each data set and for each knot interval $(z_1,z_2),\dots,(z_{K-1},z_K)$. For each knot interval, the average BIC value over all data sets is then calculated. The potential knot with the smallest average BIC is added to the model. Knots are added until the maximum number of knots $3\bar{n}^{1/5}$ is reached and the multiple $3$ is chosen based on experience. In the final step, the least important knots are removed successively during stepwise knot deletion where the BIC is also used to measure importance. This procedure is repeated until there are five knots left.
 
 ## Constrained optimisation and initial parameters {#ES1.1:subsec:constrainedoptimization}
 
 The splines are constructed in such a way that any linear combination of the spline functions in two tails is linear. For $T$ time series, the sufficient conditions for feasible parameters are:
 \begin{equation}\label{constrainedparameters1}
-\theta_{1,1} < 0,\dots,\theta_{t,1} < 0,\dots,\theta_{T,1} < 0 \hspace{0.3cm} \text{and} \hspace{0.3cm} \theta_{1,p} < 0,\dots,\theta_{t,p} < 0,\dots,\theta_{T,p} < 0.
+  \theta_{1,1} < 0,\dots,\theta_{t,1} < 0,\dots,\theta_{T,1} < 0
+  \quad \text{and} \quad
+  \theta_{1,p} < 0,\dots,\theta_{t,p} < 0,\dots,\theta_{T,p} < 0.
 \end{equation}
 
 For some data sets (e.g., income data), the logspline estimation process could be applied to log data instead of original data. After density estimation has been performed on the log data, it is a common practice that there will be a spike at the left end. @Silverman1986 discussed an approach of using reflection as a remedy for this spike, while @WandMarronRuppert1991 indicated another possibility by modifying the family of transformations to ensure that less mass is spread below zero. We found another possibility for removing the spike by constraining the first parameter of the log transformed model. When a log transformation is considered for the density estimation, the sufficient conditions for feasible parameters on the log space are:
 \begin{equation}\label{newconstrainedparameters1}
-\eta_{1,1} < \frac{1}{D^{(1)}_1(z)},\dots,\eta_{t,1} < \frac{1}{D^{(1)}_1(z)},\dots,\eta_{T,1} < \frac{1}{D^{(1)}_1(z)}
-\hspace{0.3cm} \text{and} \hspace{0.3cm}
-\eta_{1,p} < 0,\dots,\eta_{t,p} < 0,\dots,\eta_{T,p} < 0
+  \eta_{1,1} < \frac{1}{D^{(1)}_1(z)},\dots,\eta_{t,1} < \frac{1}{D^{(1)}_1(z)},\dots,\eta_{T,1} < \frac{1}{D^{(1)}_1(z)}
+  \quad \text{and} \quad
+  \eta_{1,p} < 0,\dots,\eta_{t,p} < 0,\dots,\eta_{T,p} < 0
 \end{equation}
 where $D^{(1)}_1(z)$ is the first derivative of the first basis function for $Z$. As we use fixed basis functions for each time period, the threshold $\frac{1}{D^{(1)}_1(z)}$ for the first parameter is the same for each $t$. Constraining the first parameter vector with this positive threshold results that the left end of the back-transformed density function goes to zero, with no spike.
 
@@ -145,17 +147,19 @@ When original data are used for the density estimation, and if the initial param
 
 In Section&nbsp;\ref{ES1.1:sec:logsplinewithcommonknots}, we proposed a method using logspline density estimation to estimate the densities independently for every year, ignoring all other years. Under normal circumstances, it is reasonable to assume that these univariate densities are related to the ones in nearby years, and it is natural to account the nearby years to the density estimation of a particular year. This is the notion behind the `conditional density estimation'. @MasseTruong1999 proposed a spline-based conditional logspline density estimation method which applies to bivariate data where both response and conditioning variables are continuous. In this section, we propose a modified version of the conditional method with two features: conditional density estimation with the discrete support of the conditioning variable, time $T'$; optimising spline degree---we not only choose the optimal knots but also optimise the spline degree of the density estimate. The concept of selecting the optimal spline degree for $B$-spline basis functions has also been used in the R package crs [@RacineNieRipley2014].
 
-Let $f(y|t)$ be the conditional density function of $Y$ given $T' = t$. $f(y|t)$ is modelled using sets of basis functions on $Y$ and $T'$. We generate a set of $B$-spline basis functions on $Y$ as in Section&nbsp;\ref{ES1.1:sec:logsplinewithcommonknots} and specify the candidate polynomial degrees of the basis functions from 2 to 10. In contrast, the basis functions in the $T'$ dimension are treated as piecewise cubic polynomials with a fixed degree value 3, and they are generated as follows. Let $J (\geq 3)$ be the number of knots in the $T'$ dimension and let $-\infty < k''_1 < \dots < k''_J < \infty$ be a knot sequence. Set $q = J - 1$. Let $B$-spline basis functions in the $T'$ dimension be $G_0(t) \equiv 1,G_1(t),\dots,G_q(t)$. The boundary basis functions on $T'$ are the same as the ones on $Y$ so that $G_1(t)$ is linear with a negative slope on $(-\infty,k''_1]$; $G_2(t),\dots,G_q(t)$ are constant on $(-\infty,k''_1]$; $G_q(t)$ is linear with a positive slope on $[k''_J,\infty)$; and $G_1(t),\dots,G_{q-1}(t)$ are constant on $[k''_J,\infty)$.
+Let $f(y|t)$ be the conditional density function of $Y$ given $T' = t$. $f(y|t)$ is modelled using sets of basis functions on $Y$ and $T'$. We generate a set of $B$-spline basis functions on $Y$ as in Section&nbsp;\ref{ES1.1:sec:logsplinewithcommonknots} and specify the candidate polynomial degrees of the basis functions from 2 to 10. In contrast, the basis functions in the $T'$ dimension are treated as piecewise cubic polynomials with a fixed degree value 3, and they are generated as follows. Let $J (\geq 3)$ be the number of knots in the $T'$ dimension and let $-\infty < z'_1 < \dots < z'_J < \infty$ be a knot sequence. Set $q = J - 1$. Let $B$-spline basis functions in the $T'$ dimension be $G_0(t) \equiv 1,G_1(t),\dots,G_q(t)$. The boundary basis functions on $T'$ are the same as the ones on $Y$ so that $G_1(t)$ is linear with a negative slope on $(-\infty,z'_1]$; $G_2(t),\dots,G_q(t)$ are constant on $(-\infty,z'_1]$; $G_q(t)$ is linear with a positive slope on $[z'_J,\infty)$; and $G_1(t),\dots,G_{q-1}(t)$ are constant on $[z'_J,\infty)$.
 
 The univariate logspline model is extended to the conditional logspline model as:
 \begin{equation}
 \log f(y|t;\bm{\alpha}) = \sum\limits_{k=0}^{p} \theta_k(t) B_k(y),
 \end{equation}
-$\theta_0(t) = -\log \left\{ \int_\mathds{R} \exp \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right)dy \right\}$ and $\theta_k(t) = \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t)$, $k=1,\dots,p$ where $\bm{\alpha} = \{\alpha_{j,k}\} \in \mathcal{A}$ are parameters for $j=0,\dots,q$ and $k=1,\dots,p$, and $\theta_0(t)$ is the normalising constant so that $\int_\mathds{R} f(y|t;\bm{\alpha}) \hspace{0.1cm} dy = 1$.
+$\displaystyle\theta_0(t) = -\log\left\{ \int_\mathds{R} \exp \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right)dy \right\}$ and $\theta_k(t) = \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t)$, $k=1,\dots,p$ where $\bm{\alpha} = \{\alpha_{j,k}\} \in \mathcal{A}$ are parameters for $j=0,\dots,q$ and $k=1,\dots,p$, and $\theta_0(t)$ is the normalising constant so that $\int_\mathds{R} f(y|t;\bm{\alpha})  dy = 1$.
 
 The log-likelihood function of the conditional logspline model with a discrete conditioning variable is defined by:
-$L(\bm{\alpha})  = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \log f(y_{t,i}|t;\bm{\alpha}) = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y_{t,i}) - a(\bm{\alpha}) \right)$
-where $a(\bm{\alpha}) = \log \left\{ \int_\mathds{R} \exp \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right) \hspace{0.1cm} dy \right\}$.
+$$
+  L(\bm{\alpha}) = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \log f(y_{t,i}|t;\bm{\alpha}) = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y_{t,i}) - a(\bm{\alpha}) \right)
+$$
+where $\displaystyle a(\bm{\alpha}) = \log \left\{ \int_\mathds{R} \exp \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right)  dy \right\}$.
 
 ## Knots and spline degree selection {#ES1.2:subsec:knotsselection}
 
@@ -165,12 +169,16 @@ We choose the fixed number of knots in the $T'$ dimension, $J=5$. In the $Y$ dim
 
 A vector of parameters in the conditional logspline model $\{\alpha_{j,k}\}$ for $j=0,\dots,q$ and $k=1.\dots,p$ is said to be feasible if:
 \begin{equation}\label{constrainedparametersconditional}
-\alpha_{0,1} < 0,\dots,\alpha_{q,1} < 0 \hspace{0.2cm} \text{and} \hspace{0.2cm} \alpha_{0,p} < 0,\dots,\alpha_{q,p} < 0.
+  \alpha_{0,1} < 0,\dots,\alpha_{q,1} < 0
+  \quad \text{and} \quad
+  \alpha_{0,p} < 0,\dots,\alpha_{q,p} < 0.
 \end{equation}
 
 In Section&nbsp;\ref{ES1.1:subsec:constrainedoptimization}, we proposed a constrained optimisation in univariate logspline model. Following the idea into the conditional logspline model, when a log transformation is considered for the conditional density estimation, the sufficient conditions for feasible parameters on the log space are:
 \begin{equation}\label{newconstrainedparametersconditional}
-\phi_{0,1} < \frac{1}{D^{(1)}_1(z)},\dots,\phi_{q,1} < \frac{1}{D^{(1)}_1(z)} \hspace{0.2cm} \text{and} \hspace{0.2cm} \phi_{0,p} < 0,\dots,\phi_{q,p} < 0
+  \phi_{0,1} < \frac{1}{D^{(1)}_1(z)},\dots,\phi_{q,1} < \frac{1}{D^{(1)}_1(z)}
+  \quad \text{and} \quad
+  \phi_{0,p} < 0,\dots,\phi_{q,p} < 0
 \end{equation}
 where $\bm{\phi} = \{\phi_{j,k}\} \in \Phi$ is a set of parameters on log space for $j=0,\dots,q$ and $k=1,\dots,p$.
 
@@ -186,16 +194,17 @@ The proposed conditional logspline with kernel weights model is:
 \begin{equation}\label{objective1.3model}
 \log f(y|t;\bm{\theta},h) = \sum\limits_{s=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y) - r(\bm{\theta},h)
 \end{equation}
-where $\bm{\theta} = \{ \bm{\theta}_t \}_{t=1}^T$, $w_s(t) = \frac{K \left( \frac{t-T'_s}{h} \right)}{\sum\limits_{s=1}^{T} K \left( \frac{t-T'_s}{h} \right)}$, $r(\bm{\theta},h) = \log \left\{ \int_\mathds{R} \exp \left( {\sum\limits_{s=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y)} \right) \hspace{0.1cm} dy \right\}$, $h$ is the bandwidth in $T'$ dimension, and $K(\cdot)$ is a kernel function satisfying the properties:
+where $\bm{\theta} = \{ \bm{\theta}_t \}_{t=1}^T$, $w_s(t) = \frac{K \left( \frac{t-T'_s}{h} \right)}{\sum\limits_{s=1}^{T} K \left( \frac{t-T'_s}{h} \right)}$, $r(\bm{\theta},h) = \log \left\{ \int_\mathds{R} \exp \left( {\sum\limits_{s=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y)} \right)  dy \right\}$, $h$ is the bandwidth in $T'$ dimension, and $K(\cdot)$ is a kernel function satisfying the properties:
 \begin{equation}\label{Kernel}
-\sum K(v) = 1,
-\sum vK(v) = 0,
-\hspace{0.1cm}
-\sigma_K^2 = \sum v^2K(v) < \infty,
-\hspace{0.1cm}
-R(K) = \sum K^2(v) < \infty
-\hspace{0.1cm} \text{and} \hspace{0.1cm}
-G(K) = \sum v^2 K^2(v) < \infty.
+\begin{split}
+  \sum K(v) = 1,\quad
+  \sum vK(v) = 0,\quad
+  \sigma_K^2 = \sum v^2K(v) < \infty,
+  \\
+  R(K) = \sum K^2(v) < \infty \quad
+  \text{and}\quad
+  G(K) = \sum v^2 K^2(v) < \infty.
+\end{split}
 \end{equation}
 
 ## Optimisation methods {#EK1.3:subsec:optimisationmethods}
@@ -208,14 +217,16 @@ L_t(h) = \sum\limits_{i=1}^{n_t} \log f(y_{t,i}|t;\bm{\theta},h)
 \end{equation}
 where $\log f(y|t;\bm{\theta},h)$ is defined as in \eqref{objective1.3model}. This suggests that the optimal bandwidth $\hat{h}$ could be found by maximising the sum of the log-likelihood functions over all $T$ data sets:
 \begin{equation}\label{method1}
-\hat{h} = \mathop{\text{arg} \hspace{0.1cm} \text{max}}_{h} \hspace{0.1cm} l(h) \hspace{0.3cm} \text{where} \hspace{0.2cm} l(h) = \sum\limits_{t=1}^T L_t(h).
+  \hat{h} = \mathop{\text{arg}  \max}_{h}  l(h)
+  \quad \text{where} \quad
+  l(h) = \sum\limits_{t=1}^T L_t(h).
 \end{equation}
 
 We found that the maximum likelihood estimation has a trivial maximum at $h=0$. This implies that there is no difference between the conditional density estimates and the univariate density estimates. Therefore, the leave-one-out maximum likelihood estimation is invoked by replacing $\log f(y_{t,i}|t;\bm{\theta},h)$ in \eqref{newL_t} by the leave-one-out logspline density estimation model at time $t$:
 \begin{equation}
 \log f_{-t}(y|t;\bm{\theta},h) = \sum\limits_{s(\ne t)=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y) - r_{-t}(\bm{\theta},h)
 \end{equation}
-where $r_{-t}(\bm{\theta},h) = \log \left\{ \int_\mathds{R} \exp \left( {\sum\limits_{s(\ne t)=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y)} \right) \hspace{0.1cm} dy \right\}$. Using leave-one-out log-likelihood functions over all $T$ data sets, $\{ L_t(h) \}_{t=1}^T$, the optimal bandwidth $\hat{h}$ could be found by maximising the sum of the leave-one-out log-likelihood functions as in \eqref{method1}.
+where $r_{-t}(\bm{\theta},h) = \log \left\{ \int_\mathds{R} \exp \left( {\sum\limits_{s(\ne t)=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y)} \right)  dy \right\}$. Using leave-one-out log-likelihood functions over all $T$ data sets, $\{ L_t(h) \}_{t=1}^T$, the optimal bandwidth $\hat{h}$ could be found by maximising the sum of the leave-one-out log-likelihood functions as in \eqref{method1}.
 
 # Conditional kernel estimation
 \label{EK1.4:sec:conditionalkerneestimation}
@@ -237,10 +248,10 @@ This estimator is consistent provided that $h_t\rightarrow0$, $h_y\rightarrow0$,
 \begin{equation}\label{IMSE2}
 \text{IMSE} \hat{f}(y|t) \approx \frac{A}{nh_th_y} - \frac{B}{nh_t} + Dh_y^4
 \end{equation}
-where the constants $A, B \hspace{0.1cm} \text{and} \hspace{0.1cm} D$ are given by:
+where the constants $A, B  \text{and}  D$ are given by:
 $A = \sum\limits_{t=1}^T R^2(K) \label{AA}$,
-$B = \sum\limits_{t=1}^T \left( \int_\mathds{R} R(K) f^2(y|t) \hspace{0.1cm} dy \right) \label{BB}$, and
-$D = \sum\limits_{t=1}^T \left( \int_\mathds{R} \frac{\sigma_K^4 m_t}{4} \left\{ \frac{\partial^2 f(y|t)}{\partial y^2} \right\}^2 \hspace{0.1cm} dy \right) \label{CC}$. Differentiating \eqref{IMSE2} with respect to $h_y$ and setting the derivatives to zero leads to the approximate optimal bandwidth of $h_y$:
+$B = \sum\limits_{t=1}^T \left( \int_\mathds{R} R(K) f^2(y|t)  dy \right) \label{BB}$, and
+$D = \sum\limits_{t=1}^T \left( \int_\mathds{R} \frac{\sigma_K^4 m_t}{4} \left\{ \frac{\partial^2 f(y|t)}{\partial y^2} \right\}^2  dy \right) \label{CC}$. Differentiating \eqref{IMSE2} with respect to $h_y$ and setting the derivatives to zero leads to the approximate optimal bandwidth of $h_y$:
 \begin{equation}\label{h_y^*}
 \hat{h}_y = \left\{ \frac{A}{4nD} \right\}^{1/5} \hat{h}_t^{-1/5}.
 \end{equation}
@@ -271,7 +282,7 @@ where $K^{(r)}(\cdot)$ is the $r$ derivative of the kernel function.
 
 Following @HallMarron1987 idea in univariate density estimation, we propose the integrated squared second derivative of the conditional kernel density estimator of $f(y|t)$:
 \begin{equation}\label{wand}
-\int_\mathds{R} \left( \hat{f}^{(2)}(y|t) \right)^2 \hspace{0.2cm} dy = \frac{ \frac{1}{h_y^5} \mathop{\sum\limits_{s_2=1}^{T} \sum\limits_{s_1=1}^{T} \sum\limits_{j=1}^{n_{s_2}} \sum\limits_{i=1}^{n_{s_1}}}_{i \neq j} K \left( \frac{t-T'_{s_1}}{h_t} \right) K \left( \frac{t-T'_{s_2}}{h_t} \right) K^{(4)} \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right) }
+\int_\mathds{R} \left( \hat{f}^{(2)}(y|t) \right)^2 dy = \frac{ \frac{1}{h_y^5} \mathop{\sum\limits_{s_2=1}^{T} \sum\limits_{s_1=1}^{T} \sum\limits_{j=1}^{n_{s_2}} \sum\limits_{i=1}^{n_{s_1}}}_{i \neq j} K \left( \frac{t-T'_{s_1}}{h_t} \right) K \left( \frac{t-T'_{s_2}}{h_t} \right) K^{(4)} \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right) }
 { \left( \sum\limits_{s=1}^{T} n_s K \left( \frac{t-T'_s}{h_t} \right) \right)^2 }
 \end{equation}
 
@@ -283,13 +294,30 @@ where $z = \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right)^2$. Following @WandM
 
 Substituting \eqref{Kernel^4} into \eqref{wand}, we get the integrated squared second derivative of the conditional density kernel density estimator of $f(y|t)$:
 \begin{equation}\label{plugin}
-\int_\mathds{R} \left( \hat{f}^{(2)}(y|t) \right)^2 \hspace{0.1cm} dy =
-\frac{\frac{1}{\sqrt{2\pi}{h_y}^5} \left[ \sum\limits_{s_2=1}^{T} \sum\limits_{s_1=1}^{T} \sum\limits_{j=1}^{n_{s_2}} \sum\limits_{i=1}^{n_{s_1}}
-  K \left( \frac{t-T'_{s_1}}{h_t} \right)
-  K \left( \frac{t-T'_{s_2}}{h_t} \right) \Upsilon
-  - 3 \sum\limits_{s=1}^{T} n_s \left( K \left( \frac{t-T'_s}{h_t} \right) \right)^2 \right]}{ \left( \sum\limits_{s=1}^{T} n_s K \left( \frac{t-T'_s}{h_t} \right) \right)^2 }
+\int_\mathds{R} \left( \hat{f}^{(2)}(y|t) \right)^2 dy
+  = \frac{
+      \frac{1}{\sqrt{2\pi}{h_y}^5}
+      \left[
+        \sum\limits_{s_2=1}^{T}
+        \sum\limits_{s_1=1}^{T}
+        \sum\limits_{j=1}^{n_{s_2}}
+        \sum\limits_{i=1}^{n_{s_1}}
+          K \left( \frac{t-T'_{s_1}}{h_t} \right)
+          K \left( \frac{t-T'_{s_2}}{h_t} \right) \zeta -
+          3 \sum\limits_{s=1}^{T} n_s \left( K \left( \frac{t-T'_s}{h_t} \right) \right)^2
+      \right]
+    }{
+      \left( \sum\limits_{s=1}^{T} n_s K \left( \frac{t-T'_s}{h_t} \right) \right)^2
+    }
 \end{equation}
-where $\Upsilon = \exp \left\{ -\frac{z}{2} \right\} \left( z^2 - 6z + 3 \right)$, $z = \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right)^2$, $h_y = \sqrt{2}h'_y$, $h'_y = \hat{\sigma}_Y \left( \frac{84\sqrt{\pi}}{5\bar{n}^2} \right)^{1/13}$, $\hat{\sigma}_Y$ is the standard deviation of pooled $Y$ data, $\bar{n}$ is the average number of observations and $h_t$ is obtained from \eqref{h_t^*}. With the integrated square of the second derivative of the density estimator of $f(y|t)$ in \eqref{plugin}, the optimal bandwidth in the $Y$ dimension, $\hat{h}_y$, is obtained from \eqref{h_y^*}.
+where $\zeta = \exp(-\frac{z}{2})(z^2 - 6z + 3)$,
+$z = \left( \frac{Y_{s_1,i} - Y_{s_2,j}}{h_y} \right)^2$,
+$h_y = \sqrt{2}h'_y$,
+$h'_y = \hat{\sigma}_Y \left( \frac{84\sqrt{\pi}}{5\bar{n}^2} \right)^{1/13}$,
+$\hat{\sigma}_Y$ is the standard deviation of pooled $Y$ data,
+$\bar{n}$ is the average number of observations and
+$h_t$ is obtained from \eqref{h_t^*}.
+With the integrated square of the second derivative of the density estimator of $f(y|t)$ in \eqref{plugin}, the optimal bandwidth in the $Y$ dimension, $\hat{h}_y$, is obtained from \eqref{h_y^*}.
 
 # Application
 \label{APP:sec:application}
@@ -301,17 +329,19 @@ This section presents the results obtained from four estimation methods discusse
 \begin{table}[H]
   \centering
   \begin{tabular}{lccccc}
+  \toprule
     Application & Number & Average number & Initial & After stepwise & Optimal \\
     & of series & of observations & knots & knot addition & knots \\
-    \hline
-    Unimodal example & 20 & 2000 & 9 & 9 & 6 \\
-    Bimodal example & 20 & 2000 & 9 & 11 & 7 \\
-    UK income 1961--1991 & 31 & 6066 & 11 & 13 & 11 \\
-    UK income & 19 & 24725 & 15 & 18 & 13 \\
-    1994/1995--2012/2013 & & & & & \\
-    Australian income & 10 & 9432 & 12 & 14 & 9 \\
-    1994/1995--2007/2008 & & & & & \\
-    UK age 1961--1991 & 31 & 6100 & 11 & 11 & 7 \\
+  \midrule
+    Unimodal example     & 20 & 2000  & 9  & 9  & 6 \\
+    Bimodal example      & 20 & 2000  & 9  & 11 & 7 \\
+    UK income 1961--1991 & 31 & 6066  & 11 & 13 & 11 \\
+    UK income            & 19 & 24725 & 15 & 18 & 13 \\
+    1994/1995--2012/2013 &    &       &    &    & \\
+    Australian income    & 10 & 9432  & 12 & 14 & 9 \\
+    1994/1995--2007/2008 &    &       &    &    & \\
+    UK age 1961--1991    & 31 & 6100  & 11 & 11 & 7 \\
+  \bottomrule
   \end{tabular}
   \caption{Results of the logspline with common knots method.}
   \label{Est1_Results}
@@ -408,17 +438,19 @@ The data for Figure \ref{Est1}(d) comprise UK income data for a period of 19 yea
 \begin{table}[H]
   \centering
   \begin{tabular}{lcccc}
+  \toprule
     Application & Initial & After stepwise & Optimal & Optimal \\
     & knots & knot addition & knots & degree \\
-    \hline
-    Unimodal example & 9 & 10 & 7 & 3 \\
-    Bimodal example & 9 & 12 & 12 & 2 \\
+  \midrule
+    Unimodal example     & 9  & 10 & 7  & 3 \\
+    Bimodal example      & 9  & 12 & 12 & 2 \\
     UK income 1961--1991 & 11 & 13 & 13 & 5 \\
-    UK income & 15 & 18 & 15 & 5 \\
-    1994/1995--2012/2013 & & & & \\
-    Australian income & 12 & 16 & 16 & 5 \\
-    1994/1995--2007/2008 & & & & \\
+    UK income            & 15 & 18 & 15 & 5 \\
+    1994/1995--2012/2013 &    &    &    & \\
+    Australian income    & 12 & 16 & 16 & 5 \\
+    1994/1995--2007/2008 &    &    &    & \\
     UK age 1961--1991 & 11 & 14 & 13 & 6 \\
+  \bottomrule
   \end{tabular}
   \caption{Results of the conditional logspline with adaptive polynomial framework method.}
   \label{Est2_Results}
@@ -472,17 +504,19 @@ Figure \ref{Est2} displays the conditional density plots that were estimated usi
 \begin{table}[H]
   \centering
   \begin{tabular}{lcccc}
+  \toprule
     Application & Initial & After stepwise & Optimal & Optimal bandwidth \\
     & knots & knot addition & knots & in the $T'$ dimension \\
-    \hline
-    Unimodal example & 9 & 9 & 6 & 0.32 \\
-    Bimodal example & 9 & 11 & 7 & 0.99 \\
+  \midrule
+    Unimodal example     & 9  & 9  & 6  & 0.32 \\
+    Bimodal example      & 9  & 11 & 7  & 0.99 \\
     UK income 1961--1991 & 11 & 13 & 11 & 0.99 \\
-    UK income & 15 & 18 & 13 & 0.31 \\
-    1994/1995--2012/2013 & & & & \\
-    Australian income & 12 & 14 & 9 & 0.10 \\
-    1994/1995--2007/2008 & & & & \\
-    UK age 1961--1991 & 11 & 11 & 7 & 2.09 \\
+    UK income            & 15 & 18 & 13 & 0.31 \\
+    1994/1995--2012/2013 &    &    &    & \\
+    Australian income    & 12 & 14 & 9  & 0.10 \\
+    1994/1995--2007/2008 &    &    &    & \\
+    UK age 1961--1991    & 11 & 11 & 7  & 2.09 \\
+  \bottomrule
   \end{tabular}
   \caption{Results of the conditional logspline with kernel weights method.}
   \label{Est3_Results}
@@ -495,13 +529,14 @@ Combining the logspline density estimation method with kernel weights, we obtain
 \begin{table}
   \centering
   \begin{tabular}{lll}
+  \toprule
     Application & $h_t$ & $h_y$ \\
-    \hline
+  \midrule
     \bf{Unimodal example} \\
-    URR          & 1.45  & 0.0151 \\
+    URR          & 1.45 & 0.0151 \\
     Bootstrap    & 0.94 & 0.0189 \\
-    Discrete URR & 1.45  & 0.0176 \\
-    Plug-in      & 1.45  & 0.0182 \\
+    Discrete URR & 1.45 & 0.0176 \\
+    Plug-in      & 1.45 & 0.0182 \\
     \bf{Bimodal example} \\
     URR          & 13.2 & 0.0536 \\
     Bootstrap    & 5.27 & 0.0778 \\
@@ -527,6 +562,7 @@ Combining the logspline density estimation method with kernel weights, we obtain
     Bootstrap    & 19.8 & 0.0417 \\
     Discrete URR & 49.4 & 0.0241 \\
     Plug-in      & 49.4 & 0.0200 \\
+  \bottomrule
   \end{tabular}
   \caption{Results of the conditional kernel method.}
   \label{Est4_Results}
@@ -546,18 +582,20 @@ URR and discrete URR are the least time-consuming methods. It is not surprising 
 \begin{table}
   \centering
   \begin{tabular}{lcccccc}
-    Method & Ex. 1 & Ex. 2 & Ex. 3 & Ex. 4 & Ex. 5 & Ex. 6 \\
-    & ($\bar{n}$=2000) & ($\bar{n}$=2000) & ($\bar{n}$=6066) & ($\bar{n}$=24725) & ($\bar{n}$=9432) & ($\bar{n}$=6066) \\
-    & ($T$=20) & ($T$=20) & ($T$=31) & ($T$=19) & ($T$=10) & ($T$=31) \\
-    \hline
-    Univariate log.  & 0:52 & 1:82 & 7:48 & 58:13 & 5:72 & 4:59 \\
-    Con. log.-spline & 73:46 & 69:68 & 121:65 & 531:93 & 74:04 & 176:33 \\
-    Con. log.-kernel & 0:52 & 1:85 & 7:66 & 58:58 & 5:77 & 4:82 \\
-    Con. kernel & & & & & & \\
-    URR          & 0:8 & 0:9 & 0:24 & 0:58 & 0:13 & 0:34 \\
-    Bootstrap    & 46:38 & 33:72 & 144:29 & 391:86 & 58:39 & 96:04 \\
-    Discrete URR & 0:8 & 0:9 & 0:26 & 1:04 & 0:15 & 0:35 \\
-    Plug-in      & 3:86 & 3:86 & 125:25 & 574:24 & 15:72 & 125:72 \\
+  \toprule
+    Method           & Ex. 1            & Ex. 2            & Ex. 3            & Ex. 4             & Ex. 5            & Ex. 6 \\
+                     & ($\bar{n}$=2000) & ($\bar{n}$=2000) & ($\bar{n}$=6066) & ($\bar{n}$=24725) & ($\bar{n}$=9432) & ($\bar{n}$=6066) \\
+                     & ($T$=20)         & ($T$=20)         & ($T$=31)         & ($T$=19)          & ($T$=10)         & ($T$=31) \\
+  \midrule
+    Univariate log.  & 0:52             & 1:82             & 7:48             & 58:13             & 5:72             & 4:59 \\
+    Con. log.-spline & 73:46            & 69:68            & 121:65           & 531:93            & 74:04            & 176:33 \\
+    Con. log.-kernel & 0:52             & 1:85             & 7:66             & 58:58             & 5:77             & 4:82 \\
+    Con. kernel      &                  &                  &                  &                   &                  & \\
+    URR              & 0:8              & 0:9              & 0:24             & 0:58              & 0:13             & 0:34 \\
+    Bootstrap        & 46:38            & 33:72            & 144:29           & 391:86            & 58:39            & 96:04 \\
+    Discrete URR     & 0:8              & 0:9              & 0:26             & 1:04              & 0:15             & 0:35 \\
+    Plug-in          & 3:86             & 3:86             & 125:25           & 574:24            & 15:72            & 125:72 \\
+  \bottomrule
   \end{tabular}
   \caption{Mean computation time for different methods. Times are measured in minutes:seconds. $\bar{n}$ and $T$ denote the average number of observations and the number of data sets respectively. The abbreviations Ex., Con and log. denote the example, Conditional and logspline respectively.}
   \label{Est_Computationalefficiency}
@@ -573,7 +611,7 @@ After the estimated densities have been obtained, it is necessary to assess how 
 Let $f_t(y)$ and $\hat{f}_t(y)$ be the true density and estimated density at time $t$ respectively. Each density has thousands of observations. Given that the estimates should be evaluated by assessing whether the estimated densities are correct, we test whether the collection of estimated densities is equal to the collection of true densities: $\{f_t(y)\}_{t=1}^T = \{ \hat{f}_t(y) \}_{t=1}^T$.
 It is difficult to test this null hypothesis, as the true density $\hat{f}_t(y)$ is never obtained for real data sets. However, the properties of the following modified probability integral transformation provide the solution to this problem:
 \begin{equation}\label{pit}
-\left\{ \{ u_{t,j} \}_{j=1}^{n_t} = \left\{ \int_{-\infty}^{y_{t,j}} \hat{f}_{t,j}(v) \hspace{0.2cm} dv \right\}_{j=1}^{n_t} \right\}_{t=1}^T
+\left\{ \{ u_{t,j} \}_{j=1}^{n_t} = \left\{ \int_{-\infty}^{y_{t,j}} \hat{f}_{t,j}(v) dv \right\}_{j=1}^{n_t} \right\}_{t=1}^T
 \end{equation}
 @Rosenblatt1952 showed that the distribution of PIT is uniform(0,1) for the true generating density. In this situation, we assess whether the distribution of PITs under the null hypothesis is uniform(0,1). Specifically, if the realisations at time $t$, $\{ y_{t,j} \}_{j=1}^{n_t}$, come from the estimated densities at time $t$, $\hat{f}_t(y)$, then the series of PITs at time $t$, $\{ u_{t,1},\dots,u_{t,n_t} \}$, is uniform(0,1). If the series of PITs deviates from the uniform(0,1), then the estimated density at time $t$, $\hat{f}_t(y)$, is not identical to the true density, $f_t(y)$.
 
@@ -582,14 +620,16 @@ A summary of the evaluation results of the logspline with common knots method is
 \begin{table}
   \centering
   \begin{tabular}{lc}
-    Application & UPIT \\
-    \hline
-    Unimodal example & 20/20 \\
-    Bimodal example & 20/20 \\
-    UK income 1961--1991 & 31/31 \\
-    UK income 1994/1995--2012/2013 & 19/19 \\
+  \toprule
+    Application                            & UPIT \\
+  \midrule
+    Unimodal example                       & 20/20 \\
+    Bimodal example                        & 20/20 \\
+    UK income 1961--1991                   & 31/31 \\
+    UK income 1994/1995--2012/2013         & 19/19 \\
     Australian income 1994/1995--2007/2008 & 10/10 \\
-    UK age 1961--1991 & 29/31 \\
+    UK age 1961--1991                      & 29/31 \\
+  \bottomrule
   \end{tabular}
   \caption{Evaluation results of the logspline with common knots method.}
   \label{Est_Evaluationresults1}
@@ -600,8 +640,9 @@ In this paper, we compare six conditional density estimation methods (two condit
 \begin{table}
   \centering
   \begin{tabular}{lcllll}
+  \toprule
     Method & UPIT(/20) & LS & QS & SS & CRPS \\
-    \hline
+  \midrule
     Conditional logspline-spline & 19 & \bf{\color{blue}7.09} & \bf{\color{blue}-0.000984} & \bf{\color{blue}-0.0312} & \bf{\color{blue}168} \\
     Conditional logspline-kernel & 20 & \bf{\color{blue}7.09} & \bf{\color{blue}-0.000984} & \bf{\color{blue}-0.0312} & \bf{\color{blue}168} \\
     Conditional kernel & & & & & \\
@@ -609,6 +650,7 @@ In this paper, we compare six conditional density estimation methods (two condit
     Bootstrap     & 19 & 7.12 & -0.000958 & -0.0308 & 173 \\
     Discrete URR  & 18 & 7.12 & -0.000953 & -0.0307 & 173 \\
     Plug-in       & 18 & 7.12 & -0.000952 & -0.0307 & 173 \\
+  \bottomrule
   \end{tabular}
   \caption{Evaluation results of six conditional methods for unimodal simulated example.}
   \label{Est_Comparisonresults1}
@@ -617,8 +659,9 @@ In this paper, we compare six conditional density estimation methods (two condit
 \begin{table}
   \centering
   \begin{tabular}{lcllll}
+  \toprule
     Method & UPIT(/20) & LS & QS & SS & CRPS \\
-    \hline
+  \midrule
     Conditional logspline-spline & 20 & \bf{\color{blue}0.941} & \bf{-0.456}             & \bf{-0.675}             & \bf{0.432} \\
     Conditional logspline-kernel & 20 & \bf{\color{blue}0.941} & \bf{\color{blue}-0.457} & \bf{\color{blue}-0.676} & \bf{\color{blue}0.430} \\
     Conditional kernel & & & & & \\
@@ -626,6 +669,7 @@ In this paper, we compare six conditional density estimation methods (two condit
     Bootstrap    & 12 & 0.996 & -0.437 & -0.661 & 0.440 \\
     Discrete URR & 3  & 1.00  & -0.435 & -0.660 & 0.438 \\
     Plug-in      & 3  & 0.999 & -0.436 & -0.660 & 0.438 \\
+  \bottomrule
   \end{tabular}
   \caption{Evaluation results of six conditional methods for bimodal simulated example.}
   \label{Est_Comparisonresults2}
@@ -634,8 +678,9 @@ In this paper, we compare six conditional density estimation methods (two condit
 \begin{table}
   \centering
   \begin{tabular}{lcllll}
+  \toprule
     Method & UPIT(/31) & LS & QS & SS & CRPS \\
-    \hline
+  \midrule
     Conditional logspline-spline & 14 & \bf{\color{blue}6.18} & \bf{\color{blue}-0.00272} & \bf{-0.0519}             & \bf{78.9} \\
     Conditional logspline-kernel & 26 & \bf{\color{blue}6.18} & \bf{\color{blue}-0.00272} & \bf{\color{blue}-0.0520} & \bf{\color{blue}78.4} \\
     Conditional kernel & & & & & \\
@@ -643,6 +688,7 @@ In this paper, we compare six conditional density estimation methods (two condit
     Bootstrap    & 18 & 6.21 & -0.00267 & -0.0515 & 80.7 \\
     Discrete URR & 8  & 6.21 & -0.00265 & -0.0514 & 80.4 \\
     Plug-in      & 8  & 6.21 & -0.00266 & -0.0515 & 80.3 \\
+  \bottomrule
   \end{tabular}
   \caption{Evaluation results of six conditional methods for real example 1: UK income 1961--1991.}
   \label{Est_Comparisonresults3}
@@ -651,8 +697,9 @@ In this paper, we compare six conditional density estimation methods (two condit
 \begin{table}
   \centering
   \begin{tabular}{lcllll}
+  \toprule
     Method & UPIT(/19) & LS & QS & SS & CRPS \\
-    \hline
+  \midrule
     Conditional logspline-spline & 11 & \bf{\color{blue}6.60} & \bf{\color{blue}-0.00186} & \bf{-0.0428}             & \bf{127} \\
     Conditional logspline-kernel & 19 & \bf{\color{blue}6.60} & \bf{\color{blue}-0.00186} & \bf{\color{blue}-0.0429} & \bf{\color{blue}126} \\
     Conditional kernel & & & & & \\
@@ -660,6 +707,7 @@ In this paper, we compare six conditional density estimation methods (two condit
     Bootstrap    & 10 & 6.62 & -0.00183 & -0.0426 & 130 \\
     Discrete URR & 6  & 6.62 & -0.00182 & -0.0425 & 130 \\
     Plug-in      & 6  & 6.62 & -0.00183 & -0.0425 & 130 \\
+  \bottomrule
   \end{tabular}
   \caption{Evaluation results of six conditional methods for real example 2: UK income 1994/1995--2012/2013.}
   \label{Est_Comparisonresults4}
@@ -668,8 +716,9 @@ In this paper, we compare six conditional density estimation methods (two condit
 \begin{table}
   \centering
   \begin{tabular}{lcllll}
+  \toprule
     Method & UPIT(/10) & LS & QS & SS & CRPS \\
-    \hline
+  \midrule
     Conditional logspline-spline & 5 & \bf{\color{blue}7.15} & \bf{\color{blue}-0.00105} & \bf{\color{blue}-0.0322} & \bf{207} \\
     Conditional logspline-kernel & 10 & \bf{\color{blue}7.15} & \bf{\color{blue}-0.00105} & \bf{\color{blue}-0.0322} & \bf{207} \\
     Conditional kernel & & & & & \\
@@ -677,6 +726,7 @@ In this paper, we compare six conditional density estimation methods (two condit
     Bootstrap    & 5 & 7.18 & -0.00100 & -0.0316 & 213 \\
     Discrete URR & 2 & 7.18 & -0.00100 & -0.0316 & 211 \\
     Plug-in      & 2 & 7.17 & -0.00101 & -0.0318 & 210 \\
+  \bottomrule
   \end{tabular}
   \caption{Evaluation results of six conditional methods for real example 3: Australian income 1994/1995--2007/2008.}
   \label{Est_Comparisonresults5}
@@ -685,8 +735,9 @@ In this paper, we compare six conditional density estimation methods (two condit
 \begin{table}
   \centering
   \begin{tabular}{lcllll}
+  \toprule
     Method & UPIT(/31) & LS & QS & SS & CRPS \\
-    \hline
+  \midrule
     Conditional logspline-spline & 20 & \bf{\color{blue}4.16} & \bf{\color{blue}-0.0164}  & \bf{\color{blue}-0.128} & \bf{9.73} \\
     Conditional logspline-kernel & 22 & \bf{\color{blue}4.16} & \bf{\color{blue}-0.0164}  & \bf{\color{blue}-0.128} & \bf{\color{blue}9.72} \\
     Conditional kernel & & & & & \\
@@ -694,6 +745,7 @@ In this paper, we compare six conditional density estimation methods (two condit
     Bootstrap    & 1 & 4.18 & -0.0160 & -0.127 & 9.89 \\
     Discrete URR & 1 & 4.18 & -0.0161 & -0.127 & 9.86 \\
     Plug-in      & 0 & 4.19 & -0.0162 & -0.127 & 9.90 \\
+  \bottomrule
   \end{tabular}
   \caption{Evaluation results of six conditional methods for real example 4: UK age 1961--1991.}
   \label{Est_Comparisonresults6}
@@ -737,7 +789,7 @@ and:
 \end{equation*}
 
 If roughly the same number of observations is taken for each data set, $n_s = n_t$ and hence, $m_s = m_t$. Then, we get:
-$\text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = \sum\limits_{u} K(u) q(y|(t-uh_t)) m_t \hspace{0.2cm} \text{where} \hspace{0.2cm} u=\frac{t-s}{h_t}.$
+$\text{E} \left[ \frac{1}{h_t} K \left( \frac{t-T'}{h_t} \right) q(y|T') \right] = \sum\limits_{u} K(u) q(y|(t-uh_t)) m_t$ where $u=\frac{t-s}{h_t}$.
 
 With different $s$ values, $q(y|t)$ could be estimated as:
 $q(y|t) = \frac{1}{h_t} \sum\limits_{s=1}^T K \left( \frac{t-s}{h_t} \right) q(y|s)$.
