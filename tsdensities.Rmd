@@ -55,8 +55,10 @@ The logspline model was proposed by @KooperbergStone1991, @KooperbergStone1992, 
 \end{equation}
 where
 $\bm{\theta}_t = \{\theta_{t,k}\}_{k=1}^{p_t} \in \Theta$ is a vector of parameters,
-$b_t(y;\bm{\theta}_t) = \sum\limits_{k=1}^{p_t} \theta_{t,k} B_{t,k}(y)$,
-$c_t(\bm{\theta}_t) = \log \left\{ \int_\mathds{R} \exp \left( b_t(y;\bm{\theta}_t) \right) dy \right\}$,
+$$
+  b_t(y;\bm{\theta}_t) = \sum\limits_{k=1}^{p_t} \theta_{t,k} B_{t,k}(y),\qquad
+  c_t(\bm{\theta}_t) = \log \left\{ \int_\mathds{R} \exp \left( b_t(y;\bm{\theta}_t) \right) dy \right\},
+$$
 $B_{t,k}(y)$ is the $k$th basis function at time $t$,
 $p_t = K_t - 1$ and
 $K_t$ is the number of knots at time $t$.
@@ -91,9 +93,9 @@ Section&nbsp;\ref{APP:sec:application} compares these methods on six data sets. 
 # Logspline density estimates with common knots
 \label{ES1.1:sec:logsplinewithcommonknots}
 
-Let $K (\geq 3)$ be the number of knots and let $\{z_1,\dots,z_K\}$ be a knot sequence with $-\infty < z_1 < \dots < z_K < \infty$. The knot sequence $\{z_k\}$ is the same for each time series. Let $S$ denote the collection of twice continuously differentiable functions $s$ on $\mathds{R}$ such that the restriction of $s$ to each of the intervals $(-\infty,z_1],[z_1,z_2],\dots,[z_{K-1},z_K],[z_K,\infty)$ is a cubic polynomial. Thus the functions in $S$ are cubic splines with knots at $z_1,\dots,z_K$. Let $S_0$ denotes the $K$-dimensional subspace of $S$ consisting of functions $s \in S$ such that $s$ is linear on $(-\infty,z_1]$ and $[z_K,\infty)$. Set $p = K - 1$. Then $S_0$ has a basis set of the form $\{B_0(y)\equiv1,B_1(y),\dots,B_p(y)\}$, which can be chosen such that $B_1(y)$ is linear with a negative slope on $(-\infty,z_1]$; $B_2(y),\dots,B_p(y)$ are constant on $(-\infty,z_1]$; $B_p(y)$ is linear with a positive slope on $[z_K,\infty)$; and $B_1(y),\dots,B_{p-1}(y)$ are constant on $[z_K,\infty)$.
+Let $K (\geq 3)$ be the number of knots and let $\{z_1,\dots,z_K\}$ be a knot sequence with $-\infty < z_1 < \dots < z_K < \infty$. The knot sequence $\{z_k\}$ is the same for each time series. Let $S$ denote the collection of twice continuously differentiable functions $s$ on $\mathds{R}$ such that the restriction of $s$ to each of the intervals $(-\infty,z_1],[z_1,z_2],\dots,[z_{K-1},z_K],[z_K,\infty)$ is a cubic polynomial. Thus the functions in $S$ are cubic splines with knots at $z_1,\dots,z_K$. Let $S_0$ denotes the $K$-dimensional subspace of $S$ comprising functions $s \in S$ such that $s$ is linear on $(-\infty,z_1]$ and $[z_K,\infty)$. Set $p = K - 1$. Then $S_0$ has a basis set of the form $\{B_0(y)\equiv1,B_1(y),\dots,B_p(y)\}$, which can be chosen such that $B_1(y)$ is linear with a negative slope on $(-\infty,z_1]$; $B_2(y),\dots,B_p(y)$ are constant on $(-\infty,z_1]$; $B_p(y)$ is linear with a positive slope on $[z_K,\infty)$; and $B_1(y),\dots,B_{p-1}(y)$ are constant on $[z_K,\infty)$.
 
-Let $\tilde{f}_t(y;\bm{\theta}_t)$ be the probability density estimate from data $\{y_{t,j}\}_{j=1}^{n_t}$ given $\bm{\theta}_t = \{\theta_{t,k}\}_{k=1}^p \in \Theta$. The logspline model at time $t$ is:
+Let $\tilde{f}_t(y;\bm{\theta}_t)$ be the probability density estimate from data $\{y_{t,j}\}_{j=1}^{n_t}$ given $\bm{\theta}_t = \{\theta_{t,k}\}_{k=1}^p \in \Theta$. The logspline model at time $t$ is
 \begin{equation}\label{mymodel}
   \tilde{f}_t(y;\bm{\theta}_t) = \exp \left( b_t(y;\bm{\theta}_t) - c_t(\bm{\theta}_t) \right)
 \end{equation}
@@ -109,80 +111,92 @@ The optimal parameters at time $t$ are estimated by maximising the log-likelihoo
 
 ## Common knots selection {#ES1.1:subsec:commonknotsselection}
 
-By using the ideas of the knot placement for a single data set for logspline density estimation, we propose a new algorithm to select knots for multiple data sets in an optimal manner. This algorithm consists of four steps. First, the initial number of knots is set to $2(\bar{n})^{1/5}$ where $\bar{n}$ is the average number of observations of each data set $\{n_t\}_{t=1}^T$. This choice is theoretically supported using a large sample inference for a logspline density estimator with common knots as $\big\lVert \hat{f}_t(y) - f_t(y) \big\rVert_2 = O \left( \bar{n}^{-\xi} \right)$ where $f_t(y) = f_t(y;\bm{\theta}_t)$ is the density function at time $t$, $\hat{f}_t(y) = f_t(y;\bm{\hat{\theta}}_t)$ is the logspline density estimate of $f_t(y)$, $\xi = \frac{d}{(2d+1)}$, and $d (> 0.5)$ depends on the smoothness condition of $f_t(y)$ [@Stone1990]. Hence, the number of initial knots is taken as $2\bar{n}^{1/5}$. The power $1/5$ is used based on a recommendation by @KooperbergStone1991, and the multiple $2$ is somewhat arbitrary and mainly as a result of experience.
+By using the ideas of the knot placement for a single data set for logspline density estimation, we propose a new algorithm to select knots for multiple data sets in an optimal manner. This algorithm consists of four steps. First, the initial number of knots is set to $2(\bar{n})^{1/5}$ where $\bar{n}$ is the average number of observations of each data set $\{n_t\}_{t=1}^T$. This choice is theoretically supported using large sample inference for a logspline density estimator with common knots as $\big\lVert \hat{f}_t(y) - f_t(y) \big\rVert_2 = O \left( \bar{n}^{-\xi} \right)$ where $f_t(y) = f_t(y;\bm{\theta}_t)$ is the density function at time $t$, $\hat{f}_t(y) = f_t(y;\bm{\hat{\theta}}_t)$ is the logspline density estimate of $f_t(y)$, $\xi = \frac{d}{(2d+1)}$, and $d (> 0.5)$ depends on the smoothness condition of $f_t(y)$ [@Stone1990]. Hence, the number of initial knots is taken as $2\bar{n}^{1/5}$. The power $1/5$ is used based on a recommendation by @KooperbergStone1991, and the multiple $2$ is somewhat arbitrary and mainly as a result of experience.
 
-Initial knots are placed in the second step of the algorithm. Originally, we placed two boundary knots at the first- and last-order statistics of the pooled data ($\text{min}(y)$ and $\max(y)$). However, because of the linear tail restrictions on the basis functions, we found that placing the boundary knots beyond the first- and last-order statistics works relatively well in practice. We place $z_1 = \text{min}(y) - \lambda$ and $z_K = \max(y) + \lambda$ where $\lambda = (\max(y) - \text{min}(y))/4$. If a log transformation is considered for the density estimation and $z_1 = \text{min}(y) - \lambda$ is non-positive, we consider $z_1 =\text{min}(y)$. In this paper, we use a close approximation of the Chebyshev procedure [@DeBoor1978] to place the initial knots $K_{\text{int}}$, which splits the semicircle into $N-1$ arcs of equal length to select $N$ points over an interval $[\text{min}(y),\max(y)]$.
+Initial knots are placed in the second step of the algorithm. Originally, we placed two boundary knots at the first- and last-order statistics of the pooled data ($\text{min}(y)$ and $\max(y)$). However, because of the linear tail restrictions on the basis functions, we found that placing the boundary knots beyond the first- and last-order statistics works better in practice. We place $z_1 = \text{min}(y) - \lambda$ and $z_K = \max(y) + \lambda$ where $\lambda = (\max(y) - \text{min}(y))/4$. If a log transformation is considered for the density estimation and $z_1 = \text{min}(y) - \lambda$ is non-positive, we consider $z_1 =\text{min}(y)$. In this paper, we use a close approximation of the Chebyshev procedure [@DeBoor1978] to place the initial knots $K_{\text{int}}$, which splits the semicircle into $N-1$ arcs of equal length to select $N$ points over an interval $[\text{min}(y),\max(y)]$.
 
-After obtaining the number and locations of the initial knots, the next step of the algorithm involves the stepwise addition of knots. The BIC criterion is used for the knot addition: $-2\log L(\cdot) + \tau p$ where $L(\cdot)$ is the log-likelihood function in \eqref{maximumlikelihood}, $p$ is the number of parameters in the model, and the penalty parameter $\tau = \log n$ where $n$ is the sample size. We calculate the BIC value for each data set and for each knot interval $(z_1,z_2),\dots,(z_{K-1},z_K)$. For each knot interval, the average BIC value over all data sets is then calculated. The potential knot with the smallest average BIC is added to the model. Knots are added until the maximum number of knots $3\bar{n}^{1/5}$ is reached and the multiple $3$ is chosen based on experience. In the final step, the least important knots are removed successively during stepwise knot deletion where the BIC is also used to measure importance. This procedure is repeated until there are five knots left.
+After obtaining the number and locations of the initial knots, the next step of the algorithm involves the stepwise addition of knots. The BIC criterion is used for the knot addition: $-2\log L(\cdot) + \tau p$ where $L(\cdot)$ is the log-likelihood function in \eqref{maximumlikelihood}, $p$ is the number of parameters in the model, and the penalty parameter $\tau = \log n$ where $n$ is the sample size. We calculate the BIC value for each data set and for each knot interval $(z_1,z_2),\dots,(z_{K-1},z_K)$. For each knot interval, the average BIC value over all data sets is then calculated. The potential knot with the smallest average BIC is added to the model. Knots are added until the maximum number of knots $3\bar{n}^{1/5}$ is reached where the multiple $3$ is chosen based on experience. In the final step, the least important knots are removed successively during stepwise knot deletion where the BIC is also used to measure importance. This procedure is repeated until there are five knots left.
 
 ## Constrained optimisation and initial parameters {#ES1.1:subsec:constrainedoptimization}
 
 The splines are constructed in such a way that any linear combination of the spline functions in two tails is linear. For $T$ time series, the sufficient conditions for feasible parameters are:
 \begin{equation}\label{constrainedparameters1}
-  \theta_{1,1} < 0,\dots,\theta_{t,1} < 0,\dots,\theta_{T,1} < 0
-  \quad \text{and} \quad
-  \theta_{1,p} < 0,\dots,\theta_{t,p} < 0,\dots,\theta_{T,p} < 0.
+  \theta_{t,1} < 0
+  \qquad \text{and} \qquad
+  \theta_{t,p} < 0,
 \end{equation}
+for $t=1,\dots,T$.
 
 For some data sets (e.g., income data), the logspline estimation process could be applied to log data instead of original data. After density estimation has been performed on the log data, it is a common practice that there will be a spike at the left end. @Silverman1986 discussed an approach of using reflection as a remedy for this spike, while @WandMarronRuppert1991 indicated another possibility by modifying the family of transformations to ensure that less mass is spread below zero. We found another possibility for removing the spike by constraining the first parameter of the log transformed model. When a log transformation is considered for the density estimation, the sufficient conditions for feasible parameters on the log space are:
 \begin{equation}\label{newconstrainedparameters1}
-  \eta_{1,1} < \frac{1}{D^{(1)}_1(z)},\dots,\eta_{t,1} < \frac{1}{D^{(1)}_1(z)},\dots,\eta_{T,1} < \frac{1}{D^{(1)}_1(z)}
+  \eta_{t,1} < \frac{1}{D^{(1)}_1(z)}
   \quad \text{and} \quad
-  \eta_{1,p} < 0,\dots,\eta_{t,p} < 0,\dots,\eta_{T,p} < 0
+  \eta_{t,p} < 0,
 \end{equation}
-where $D^{(1)}_1(z)$ is the first derivative of the first basis function for $Z$. As we use fixed basis functions for each time period, the threshold $\frac{1}{D^{(1)}_1(z)}$ for the first parameter is the same for each $t$. Constraining the first parameter vector with this positive threshold results that the left end of the back-transformed density function goes to zero, with no spike.
+for $t=1,\dots,T$, where $D^{(1)}_1(z)$ is the first derivative of the first basis function for $Z$. As we use fixed basis functions for each time period, the threshold $\frac{1}{D^{(1)}_1(z)}$ for the first parameter is the same for each $t$. Constraining the first parameter vector with this positive threshold results that the left end of the back-transformed density function goes to zero, with no spike.
 
-It is well known that optimisation algorithms converge to the solution quickly if the initial parameters are close to the optimal values. In finding the initial parameters, we follow @Jin1990 and @Kooperberg1991. The idea behind constructing initial parameters is minimising the $L_2$ distance from the score function to its logspline approximation relative to the (empirical) density. We found the initial parameters solving the linear equation:
-$U\hat{\bm{\eta}}^* = V$
-where $U$ is a $p \times p$ matrix with elements
-$u_{k,j} = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} D^{(1)}_k(z_{t,i}) D^{(1)}_j(z_{t,i})$
-, $V$ is a column vector of length $p$ with elements
-$v_j = - \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} D^{(2)}_j(z_{t,i})$
-and $k,j=1,\dots,p$.
+It is well known that optimisation algorithms converge to the solution quickly if the initial parameters are close to the optimal values. In finding the initial parameters, we follow @Jin1990 and @Kooperberg1991. The idea behind constructing initial parameters is minimising the $L_2$ distance from the score function to its logspline approximation relative to the (empirical) density. We found the initial parameters solving the linear equation: $U\hat{\bm{\eta}}^* = V$ where $U$ is a $p \times p$ matrix with elements
+$$
+  u_{k,j} = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} D^{(1)}_k(z_{t,i}) D^{(1)}_j(z_{t,i}),
+$$
+$k,j=1,\dots,p$, and $V$ is a column vector of length $p$ with elements
+$$
+  v_j = - \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} D^{(2)}_j(z_{t,i}).
+$$
 
 When original data are used for the density estimation, and if the initial parameters produced by this method do not satisfy the tail constraints in \eqref{constrainedparameters1}, the constraints are imposed directly. In addition, when the log data are used, and if the initial parameters do not satisfy the tail constraints in \eqref{newconstrainedparameters1}, the constraints are imposed directly.
 
 # Conditional logspline with adaptive polynomial framework
 \label{ES1.2:sec:conditionallogsplinewithfullsplinesframework}
 
-In Section&nbsp;\ref{ES1.1:sec:logsplinewithcommonknots}, we proposed a method using logspline density estimation to estimate the densities independently for every year, ignoring all other years. Under normal circumstances, it is reasonable to assume that these univariate densities are related to the ones in nearby years, and it is natural to account the nearby years to the density estimation of a particular year. This is the notion behind the `conditional density estimation'. @MasseTruong1999 proposed a spline-based conditional logspline density estimation method which applies to bivariate data where both response and conditioning variables are continuous. In this section, we propose a modified version of the conditional method with two features: conditional density estimation with the discrete support of the conditioning variable, time $T'$; optimising spline degree---we not only choose the optimal knots but also optimise the spline degree of the density estimate. The concept of selecting the optimal spline degree for $B$-spline basis functions has also been used in the R package crs [@RacineNieRipley2014].
+In the method described in Section&nbsp;\ref{ES1.1:sec:logsplinewithcommonknots}, we estimate the densities independently for every year, ignoring all other years. Under normal circumstances, it is reasonable to assume that these univariate densities are related to the ones in nearby years, and it is natural to account the nearby years to the density estimation of a particular year. @MasseTruong1999 proposed a spline-based conditional logspline density estimation method which applies to bivariate data where both response and conditioning variables are continuous. In this section, we propose a modified version of the conditional method with two additional features: we adapt the method to allow for discrete support of the conditioning variable, time $T'$; and we optimize both the knots and the degree of the spline. The concept of selecting the optimal spline degree for $B$-spline basis functions has also been used in the R package `crs` [@RacineNieRipley2014].
 
-Let $f(y|t)$ be the conditional density function of $Y$ given $T' = t$. $f(y|t)$ is modelled using sets of basis functions on $Y$ and $T'$. We generate a set of $B$-spline basis functions on $Y$ as in Section&nbsp;\ref{ES1.1:sec:logsplinewithcommonknots} and specify the candidate polynomial degrees of the basis functions from 2 to 10. In contrast, the basis functions in the $T'$ dimension are treated as piecewise cubic polynomials with a fixed degree value 3, and they are generated as follows. Let $J (\geq 3)$ be the number of knots in the $T'$ dimension and let $-\infty < z'_1 < \dots < z'_J < \infty$ be a knot sequence. Set $q = J - 1$. Let $B$-spline basis functions in the $T'$ dimension be $G_0(t) \equiv 1,G_1(t),\dots,G_q(t)$. The boundary basis functions on $T'$ are the same as the ones on $Y$ so that $G_1(t)$ is linear with a negative slope on $(-\infty,z'_1]$; $G_2(t),\dots,G_q(t)$ are constant on $(-\infty,z'_1]$; $G_q(t)$ is linear with a positive slope on $[z'_J,\infty)$; and $G_1(t),\dots,G_{q-1}(t)$ are constant on $[z'_J,\infty)$.
+Let $f(y|t)$ be the conditional density function of $Y$ given $T' = t$, where $f(y|t)$ is modelled using sets of basis functions on $Y$ and $T'$. We generate a set of $B$-spline basis functions on $Y$ as in Section&nbsp;\ref{ES1.1:sec:logsplinewithcommonknots} and specify the candidate polynomial degrees of the basis functions from 2 to 10. In contrast, the basis functions in the $T'$ dimension are treated as piecewise cubic polynomials with a fixed degree value 3, and they are generated as follows. Let $J (\geq 3)$ be the number of knots in the $T'$ dimension and let $-\infty < z'_1 < \dots < z'_J < \infty$ be a knot sequence. Set $q = J - 1$. Let $B$-spline basis functions in the $T'$ dimension be $G_0(t) \equiv 1,G_1(t),\dots,G_q(t)$. The boundary basis functions on $T'$ are the same as the ones on $Y$ so that $G_1(t)$ is linear with a negative slope on $(-\infty,z'_1]$; $G_2(t),\dots,G_q(t)$ are constant on $(-\infty,z'_1]$; $G_q(t)$ is linear with a positive slope on $[z'_J,\infty)$; and $G_1(t),\dots,G_{q-1}(t)$ are constant on $[z'_J,\infty)$.
 
 The univariate logspline model is extended to the conditional logspline model as:
 \begin{equation}
-\log f(y|t;\bm{\alpha}) = \sum\limits_{k=0}^{p} \theta_k(t) B_k(y),
+  \log f(y|t;\bm{\alpha}) = \sum\limits_{k=0}^{p} \theta_k(t) B_k(y),
 \end{equation}
-$\displaystyle\theta_0(t) = -\log\left\{ \int_\mathds{R} \exp \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right)dy \right\}$ and $\theta_k(t) = \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t)$, $k=1,\dots,p$ where $\bm{\alpha} = \{\alpha_{j,k}\} \in \mathcal{A}$ are parameters for $j=0,\dots,q$ and $k=1,\dots,p$, and $\theta_0(t)$ is the normalising constant so that $\int_\mathds{R} f(y|t;\bm{\alpha})  dy = 1$.
+$$
+  \theta_0(t) = -\log\left\{
+    \int_\mathds{R} \exp \left(
+      \sum_{k=1}^{p} \sum_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y)
+    \right)dy
+  \right\},
+$$
+and $\theta_k(t) = \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t)$, $k=1,\dots,p$ where $\bm{\alpha} = \{\alpha_{j,k}\} \in \mathcal{A}$ are parameters for $j=0,\dots,q$ and $k=1,\dots,p$, and $\theta_0(t)$ is the normalising constant so that $\int_\mathds{R} f(y|t;\bm{\alpha})  dy = 1$.
 
 The log-likelihood function of the conditional logspline model with a discrete conditioning variable is defined by:
 $$
-  L(\bm{\alpha}) = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \log f(y_{t,i}|t;\bm{\alpha}) = \sum\limits_{t=1}^{T} \sum\limits_{i=1}^{n_t} \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y_{t,i}) - a(\bm{\alpha}) \right)
+  L(\bm{\alpha})
+    = \sum_{t=1}^{T} \sum{i=1}^{n_t} \log f(y_{t,i}|t;\bm{\alpha})
+    = \sum_{t=1}^{T} \sum{i=1}^{n_t} \left(
+        \sum{k=1}^{p} \sum{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y_{t,i}) - a(\bm{\alpha})
+      \right)
 $$
 where $\displaystyle a(\bm{\alpha}) = \log \left\{ \int_\mathds{R} \exp \left( \sum\limits_{k=1}^{p} \sum\limits_{j=0}^{q} \alpha_{j,k} G_j(t) B_k(y) \right)  dy \right\}$.
 
 ## Knots and spline degree selection {#ES1.2:subsec:knotsselection}
 
-We choose the fixed number of knots in the $T'$ dimension, $J=5$. In the $Y$ dimension, we follow Section&nbsp;\ref{ES1.1:subsec:commonknotsselection} to find the initial number and locations of the knots. Having all initial knots plus the first added knot, the optimal spline degree is found by minimising BIC. After each knot addition, a search is made for the best spline degree from the candidate spline degrees from 2 to 10. Knots are added until the maximum number of knots $3\bar{n}^{1/5}$.
+We choose the fixed number of knots in the $T'$ dimension, $J=5$.\todo{This seems arbitrarily specific. Why 5?} In the $Y$ dimension, we follow Section&nbsp;\ref{ES1.1:subsec:commonknotsselection} to find the initial number and locations of the knots. Having all initial knots plus the first added knot, the optimal spline degree is found by minimising BIC. After each knot addition, a search is made for the best spline degree from the candidate spline degrees from 2 to 10. Knots are added until the maximum number of knots $3\bar{n}^{1/5}$.
 
 ## Constrained optimisation and initial parameters {#ES1.2:subsec:constrainedoptimization}
 
-A vector of parameters in the conditional logspline model $\{\alpha_{j,k}\}$ for $j=0,\dots,q$ and $k=1.\dots,p$ is said to be feasible if:
+A vector of parameters in the conditional logspline model $\{\alpha_{j,k}\}$ for $j=0,\dots,q$ and $k=1,\dots,p$ is said to be feasible if:
 \begin{equation}\label{constrainedparametersconditional}
-  \alpha_{0,1} < 0,\dots,\alpha_{q,1} < 0
-  \quad \text{and} \quad
-  \alpha_{0,p} < 0,\dots,\alpha_{q,p} < 0.
+  \alpha_{j,1} < 0 \quad \text{and} \quad \alpha_{j,p} < 0,
 \end{equation}
+for $j=0,\dots,q$.
 
 In Section&nbsp;\ref{ES1.1:subsec:constrainedoptimization}, we proposed a constrained optimisation in univariate logspline model. Following the idea into the conditional logspline model, when a log transformation is considered for the conditional density estimation, the sufficient conditions for feasible parameters on the log space are:
 \begin{equation}\label{newconstrainedparametersconditional}
-  \phi_{0,1} < \frac{1}{D^{(1)}_1(z)},\dots,\phi_{q,1} < \frac{1}{D^{(1)}_1(z)}
-  \quad \text{and} \quad
-  \phi_{0,p} < 0,\dots,\phi_{q,p} < 0
+  \phi_{j,1} < \frac{1}{D^{(1)}_1(z)}
+    \quad \text{and} \quad
+  \phi_{j,p} < 0,
 \end{equation}
-where $\bm{\phi} = \{\phi_{j,k}\} \in \Phi$ is a set of parameters on log space for $j=0,\dots,q$ and $k=1,\dots,p$.
+where $j=0,\dots,q$, and $\bm{\phi} = \{\phi_{j,k}\} \in \Phi$ is a set of parameters on log space ($j=0,\dots,q; k=1,\dots,p$).
 
-@MasseTruong1999 modified @Kooperberg1991's approach into the conditional situation by minimising the $L_2$ distance from the score function to its conditional logspline approximation relative to the (empirical) bivariate density. We adapted @MasseTruong1999's approach in finding the initial parameters when the conditional density has a discrete support on the conditioning variable. When original data are used for the density estimation, and if the initial parameters produced by this method do not satisfy the tail constraints in \eqref{constrainedparametersconditional}, the constraints are imposed directly. When log data are used, and if the initial parameters do not satisfy the tail constraints in \eqref{newconstrainedparametersconditional}, the constraints are imposed directly.
+@MasseTruong1999 modified the approach of @Kooperberg1991 to allow for conditioning by minimising the $L_2$ distance from the score function to its conditional logspline approximation relative to the (empirical) bivariate density. We adapted the approach of @MasseTruong1999 in finding the initial parameters when the conditional density has a discrete support on the conditioning variable. When original data are used for the density estimation, and if the initial parameters produced by this method do not satisfy the tail constraints in \eqref{constrainedparametersconditional}, the constraints are imposed directly. When log data are used, and if the initial parameters do not satisfy the tail constraints in \eqref{newconstrainedparametersconditional}, the constraints are imposed directly.
 
 # Conditional logspline with kernel weights
 \label{EK1.3:sec:conditionallogsplinewithkernelweigths}
@@ -192,7 +206,7 @@ Our suggested method integrates the logspline approach with kernel weights to ac
 
 The proposed conditional logspline with kernel weights model is:
 \begin{equation}\label{objective1.3model}
-\log f(y|t;\bm{\theta},h) = \sum\limits_{s=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y) - r(\bm{\theta},h)
+\log f(y|t;\bm{\theta},h) = \sum\limits_{s=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y) - r(\bm{\theta},h),
 \end{equation}
 where $\bm{\theta} = \{ \bm{\theta}_t \}_{t=1}^T$, $w_s(t) = \frac{K \left( \frac{t-T'_s}{h} \right)}{\sum\limits_{s=1}^{T} K \left( \frac{t-T'_s}{h} \right)}$, $r(\bm{\theta},h) = \log \left\{ \int_\mathds{R} \exp \left( {\sum\limits_{s=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y)} \right)  dy \right\}$, $h$ is the bandwidth in $T'$ dimension, and $K(\cdot)$ is a kernel function satisfying the properties:
 \begin{equation}\label{Kernel}
@@ -224,9 +238,15 @@ where $\log f(y|t;\bm{\theta},h)$ is defined as in \eqref{objective1.3model}. Th
 
 We found that the maximum likelihood estimation has a trivial maximum at $h=0$. This implies that there is no difference between the conditional density estimates and the univariate density estimates. Therefore, the leave-one-out maximum likelihood estimation is invoked by replacing $\log f(y_{t,i}|t;\bm{\theta},h)$ in \eqref{newL_t} by the leave-one-out logspline density estimation model at time $t$:
 \begin{equation}
-\log f_{-t}(y|t;\bm{\theta},h) = \sum\limits_{s(\ne t)=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y) - r_{-t}(\bm{\theta},h)
+\log f_{-t}(y|t;\bm{\theta},h) = \sum\limits_{s(\ne t)=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y) - r_{-t}(\bm{\theta},h),
 \end{equation}
-where $r_{-t}(\bm{\theta},h) = \log \left\{ \int_\mathds{R} \exp \left( {\sum\limits_{s(\ne t)=1}^{T} \sum\limits_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y)} \right)  dy \right\}$. Using leave-one-out log-likelihood functions over all $T$ data sets, $\{ L_t(h) \}_{t=1}^T$, the optimal bandwidth $\hat{h}$ could be found by maximising the sum of the leave-one-out log-likelihood functions as in \eqref{method1}.
+where
+$$
+  r_{-t}(\bm{\theta},h)
+    = \log \left\{ \int_\mathds{R} \exp \left(
+      {\sum_{{\scriptstyle s=1 \atop \scriptstyle s\ne t}}^{T} \sum_{k=1}^{p} w_s(t) \theta_{s,k} B_k(y)} \right)  dy \right\}.
+$$
+Using leave-one-out log-likelihood functions over all $T$ data sets, $\{ L_t(h) \}_{t=1}^T$, the optimal bandwidth $\hat{h}$ can be found by maximising the sum of the leave-one-out log-likelihood functions as in \eqref{method1}.
 
 # Conditional kernel estimation
 \label{EK1.4:sec:conditionalkerneestimation}
